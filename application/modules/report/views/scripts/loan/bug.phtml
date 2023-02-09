@@ -1,0 +1,293 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("CHECK_MISTACK"));
+$frm = $this->frm_search;
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<div style="width:100%;min-height:28cm; margin:0 auto;border: 1px dotted #ccc;padding:0px 0.2cm">
+<div id="divPrint" style="width: 100%;">
+<style>
+
+.style{
+    line-height: 20px;font-size: 11px !important;
+            font-family: 'Times New Roman','Khmer OS Battambang';
+        }
+        .hideblog{display: none;}
+        .hiddenblog{display: block !important;}
+        .style1:hover{ background: #ccc; }
+        table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+        table { page-break-inside:auto }
+        tr{ page-break-inside:avoid; page-break-after:auto; }
+        #header {
+        display: table-header-group;
+        page-break-inside:avoid; page-break-after:auto;
+        margin-top: 100px;
+        }
+        .hide{visibility: hidden;}
+        @media print {
+        div.divFooter {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 100px;
+            bottom:0px;
+            margin:0;
+        }
+            .hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+            
+        }
+        .center{text-align: center !important;}
+        table.content-data{
+            border-collapse:collapse;
+            border:1px solid #000; 
+            font-size:8px;
+			width:100%;
+        }
+        table.content-data thead tr.style {
+        line-height: 25px; font-size:10px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+            background: #c1d0f3;
+            font-weight:600;
+        }
+        table.content-data tr.style {
+         white-space: nowrap;
+        
+        }
+        table.tb-footer{
+            border-collapse:collapse;
+            border:1px solid #000; 
+            font-size:11px;
+            font-family: 'Times New Roman','Khmer OS Battambang';
+        }
+        table.tb-footer tr{
+        line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
+        }
+        table tr td{
+            padding:0 2px;
+        }
+        tr.voidclass {
+            background: #fff7f7;
+        }
+        td.centerText{
+            text-align: center;
+        }
+        .redBold {
+            font-weight: 600;
+            color: #f80000;
+        }
+
+	/*
+.style{
+	line-height: 20px;font-size: 10px !important;
+	font-family: 'Khmer OS Battambang';
+}
+.styleover:hover{ background: #ccc; }
+table tr td ul li{list-style: none;line-height: 25px; font-weight: bold;}
+ul li{list-style: none;line-height: 25px; font-weight: bold;}
+th{padding: 5px;}
+*/
+</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;">
+	<tr>
+    	<td align="center">
+        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+            	<tr>
+                	<td width="20%"></td>
+                	<td width="60%" valign="top">
+                		<ul>
+                			<li style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("ទិន្នន័យត្រូវត្រួតពិនិត្យឡើងវិញ");?></li>
+                		</ul>
+                </td>
+                    <td width="20%"></td>
+                </tr> 
+                <tr>
+                	<td colspan="3"></td>
+		           </tr>   
+            </table>
+        </td>
+    </tr>
+    <tr id="exportExcel">
+    	<td>
+            <table  border="1" class="content-data" cellspacing="0">
+                 <thead>
+                 <tr class="style" align="center" >
+                    <th scope="col"   style="padding:5px 0px;"><?php echo $tr->translate("NUM");?></th>
+                    <th scope="col"   style="padding:5px 0px;"><?php echo $tr->translate("PROJECT");?></th>
+                    <th scope="col"   style="padding:5px 0px;"><?php echo $tr->translate("ID លក់");?></th>
+                    <th scope="col"   style="padding:5px 0px;"><?php echo $tr->translate("ID ផ្ទះ/ដី");?></th>
+					<th scope="col"   style="padding:5px 0px;"><?php echo $tr->translate("អតិថិជន");?></th>
+                    <th scope="col"   style="padding:5px 0px;"><?php echo $tr->translate("ផ្ទះ/ដី");?></th>
+                    <th scope="col"   style="padding:5px 0px;"><?php echo $tr->translate("តម្លៃលក់");?></th>
+                    <th scope="col"   style="padding:5px 0px;"><?php echo $tr->translate("តម្លៃបានចុះក្នុងតារាង");?></th>
+                    <th scope="col"   style="padding:5px 0px;"><?php echo $tr->translate("ស្ថានការណ៏");?></th>
+                </tr>
+                </thead>
+                <?php $amt_r = 0;$amt_d = 0;$amt_b3 = 0;
+                ?>
+                <?php if(!empty($this->rs_sold)) foreach ($this->rs_sold as $key => $rs){ ?>
+                <?php
+                if($rs["price_sold"]==($rs["sold_schedule"]+$rs['extra_principal'])){ 
+                	continue;
+                } 
+               ?>
+                <tr class="style hover">
+               		<td data-label="<?php echo $tr->translate("NUM");?>" align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+               		<td data-label="<?php echo $tr->translate("PROJECT");?>">&nbsp;&nbsp;<?php echo $rs["branch_name"];?></td>
+               		<td data-label="<?php echo $tr->translate("ID លក់");?>">&nbsp;&nbsp;<?php echo $rs["id"];?></td>
+               		<td data-label="<?php echo $tr->translate("ID ផ្ទះ/ដី");?>">&nbsp;&nbsp;<?php echo $rs["house_id"];?></td>
+					<td data-label="<?php echo $tr->translate("អតិថិជន");?>">&nbsp;&nbsp;<?php echo $rs["client_name"];?></td>
+               		<td data-label="<?php echo $tr->translate("ផ្ទះ/");?>">&nbsp;&nbsp;<?php echo $rs["land_name"];?></td>
+               		<td data-label="<?php echo $tr->translate("តម្លៃលក់");?>">&nbsp;&nbsp;<?php echo number_format($rs["price_sold"],2);?></td>
+               		<td data-label="<?php echo $tr->translate("តម្លៃបានចុះក្នុងតារាង");?>">&nbsp;&nbsp;<?php echo number_format($rs["sold_schedule"]+$rs['extra_principal'],2);?></td>
+               		<td data-label="<?php echo $tr->translate("ស្ថានការណ៏");?>">&nbsp;&nbsp;<?php echo ($rs["sold_schedule"]<$rs["price_sold"])?"តារាងខ្វះ":"តារាងលើស";
+               		echo " ".number_format(($rs["sold_schedule"]+$rs['extra_principal'])-$rs["price_sold"],2);
+               		?></td>
+                </tr>
+                <?php }?>
+            </table>
+           			 <ul>
+                		<li style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("ផ្ទៀងផ្ទាត់ប្រាក់បានបង់  ជាមួយនឹងប្រាក់បង់ដាច់ក្នុងតារាងបង់");?></li>
+                	</ul>
+			            <table  border="1" class="content-data" cellspacing="0">
+			                <thead>
+			                 <tr  class="style" align="center" >
+			                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("NUM");?></th>
+			                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("PROJECT");?></th>
+			                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ID លក់");?></th>
+			                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ID ផ្ទះ/ដី");?></th>
+								<th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("អតិថិជន");?></th>
+			                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ផ្ទះ/ដី");?></th>
+			                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("បានបង់ពីមុនសរុប");?></th>
+			                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("បានកាត់ក្នុងតារាងសរុប");?></th>
+			                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ស្ថានការណ៏");?></th>
+			                </tr>
+			                </thead>
+			                <?php if(!empty($this->rs_paid)) foreach ($this->rs_paid as $key => $rs){ ?>
+			                <?php
+				                $rs["realpaid"] = $rs["realpaid"]+$rs["printcipal_permonthlast"]+$rs['extra_principal'];
+				                if($rs["paid_amount"]==round(($rs["realpaid"]),2)){ 
+				                	continue;
+				                } 
+				                if(($rs["realpaid"]-$rs["paid_amount"]) >=1 ){
+				                }else{
+				                	if(($rs["realpaid"]-$rs["paid_amount"]) <=-1 ){
+				                	}else{
+				                		continue;
+				                	}	
+				                }
+				                 ?>
+			                <tr class="style hover">
+			               		<td data-label="<?php echo $tr->translate("NUM");?>"  align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("PROJECT");?>">&nbsp;&nbsp;<?php echo $rs["branch_name"];?></td>
+			               		<td data-label="<?php echo $tr->translate("ID លក់");?>">&nbsp;&nbsp;<?php echo $rs["id"];?></td>
+			               		<td data-label="<?php echo $tr->translate("ID ផ្ទះ/ដី");?>">&nbsp;&nbsp;<?php echo $rs["house_id"];?></td>
+								<td data-label="<?php echo $tr->translate("អតិថិជន");?>">&nbsp;&nbsp;<?php echo $rs["client_name"];?></td>
+			               		<td data-label="<?php echo $tr->translate("ផ្ទះ/ដី");?>">&nbsp;&nbsp;<?php echo $rs["land_name"];?></td>
+			               		<td data-label="<?php echo $tr->translate("បានបង់ពីមុនសរុប");?>">&nbsp;&nbsp;<?php echo $rs["paid_amount"];?></td>
+			               		<td data-label="<?php echo $tr->translate("បានកាត់ក្នុងតារាងសរុប");?>">&nbsp;&nbsp;<?php echo number_format($rs["realpaid"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("ស្ថានការណ៏");?>" <?php 
+			               				if(($rs["realpaid"]-$rs["paid_amount"]) >=1 ){echo "style='background:red;'";}
+			               				if(($rs["realpaid"]-$rs["paid_amount"]) <=-1 ){echo "style='background:red;'";} ?>
+			               				>&nbsp;&nbsp;<?php echo ($rs["realpaid"]>$rs["paid_amount"])?"កាត់ពីតារាងលើស":"មិនទាន់ដកក្នុងតារាង";
+			               		?></td>
+			                </tr>
+			                <?php }?>
+			            </table>
+			             <ul>
+                			<li style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("ផ្ទៀងផ្ទាត់ប្រាក់បានបង់ផ្តាច់ហើយ មិនទាន់ Updateដាច់");?></li>
+                		</ul>
+		            	<table border="1" class="content-data" width="100%" cellspacing="0">
+				                 <thead>
+					                 <tr class="style" align="center" >
+					                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("NUM");?></th>
+					                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("PROJECT");?></th>
+					                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ID លក់");?></th>
+					                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ID ផ្ទះ/ដី");?></th>
+					                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ID តារាងបង់");?></th>
+										<th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("អតិថិជន");?></th>
+					                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ផ្ទះ/ដី");?></th>
+					                </tr>
+				                </thead>
+			                <?php if(!empty($this->rs_schedule)) foreach ($this->rs_schedule as $key => $rs){ ?>
+			                <?php
+			               ?>
+			                <tr class="style hover">
+			               		<td data-label="<?php echo $tr->translate("NUM");?>"   align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("PROJECT");?>" >&nbsp;&nbsp;<?php echo $rs["branch_name"];?></td>
+			               		<td data-label="<?php echo $tr->translate("ID លក់");?>" >&nbsp;&nbsp;<?php echo $rs["id"];?></td>
+			               		<td data-label="<?php echo $tr->translate("ID ផ្ទះ/ដី");?>" >&nbsp;&nbsp;<?php echo $rs["house_id"];?></td>
+			               		<td data-label="<?php echo $tr->translate("ID តារាងបង់");?>" >&nbsp;&nbsp;<?php echo $rs["schedule_id"];?></td>
+								<td data-label="<?php echo $tr->translate("អតិថិជន");?>" >&nbsp;&nbsp;<?php echo $rs["client_name"];?></td>
+			               		<td data-label="<?php echo $tr->translate("ផ្ទះ/ដី");?>" >&nbsp;&nbsp;<?php echo $rs["land_name"];?></td>
+			                </tr>
+			                <?php }?>
+		            	</table>
+		             	<ul>
+                			<li style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("ផ្ទៀងផ្ទាត់ប្រាក់ដើមគ្រា");?></li>
+                		</ul>
+		            <table  border="1" class="content-data" cellspacing="0">
+		                 <thead>
+		                 <tr  class="style" align="center" >
+		                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("NUM");?></th>
+		                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("PROJECT");?></th>
+		                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ID លក់");?></th>
+		                    <th  scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ID ផ្ទះ/ដី");?></th>
+		                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ID តារាងបង់");?></th>
+							<th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("អតិថិជន");?></th>
+		                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ផ្ទះ/ដី");?></th>
+		                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("តម្លៃលក់");?></th>
+		                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("បានបង់");?></th>
+		                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ប្រាក់ដើមនៅសល់ត្រូវ");?></th>
+		                    <th scope="col" style="padding:5px 0px;"><?php echo $tr->translate("ប្រាក់ដើមនៅសល់ក្នុងប្រព័ន្ទ");?></th>
+		                </tr>
+		                </thead>
+		                <?php 
+		                $num = 0;
+		                if(!empty($this->rs_begining)) foreach ($this->rs_begining as $key => $rs){ ?>
+		                <?php
+							$result = ($rs["price_sold"]-$rs["paid_amount"]);
+// 							$result = number_format($result,2)-number_format($rs["begining_balance"]-$rs["printcipal_permonthlast"],2);
+							$result = $result-($rs["begining_balance"]-$rs["printcipal_permonthlast"]);
+			                if($result==0){ 
+			                	continue;
+			                }else{
+			                	
+			                }
+			                $num++;
+			               ?>
+		                <tr class="style hover">
+		               		<td data-label="<?php echo $tr->translate("NUM");?>"  align="center">&nbsp;<?php echo $num; ?>&nbsp;</td>
+		               		<td data-label="<?php echo $tr->translate("PROJECT");?>" >&nbsp;&nbsp;<?php echo $rs["branch_name"];?></td>
+		               		<td data-label="<?php echo $tr->translate("ID លក់");?>" >&nbsp;&nbsp;<?php echo $rs["id"];?></td>
+		               		<td data-label="<?php echo $tr->translate("ID ផ្ទះ/ដី");?>" >&nbsp;&nbsp;<?php echo $rs["house_id"];?></td>
+		               		<td data-label="<?php echo $tr->translate("ID តារាងបង់");?>" >&nbsp;&nbsp;<?php echo $rs["fund_id"];?></td>
+							<td data-label="<?php echo $tr->translate("អតិថិជន");?>" >&nbsp;&nbsp;<?php echo $rs["client_name"];?></td>
+		               		<td data-label="<?php echo $tr->translate("ផ្ទះ/ដី");?>" >&nbsp;&nbsp;<?php echo $rs["land_name"];?></td>
+		               		<td data-label="<?php echo $tr->translate("តម្លៃលក់");?>" >&nbsp;&nbsp;<?php echo $rs["price_sold"];?></td>
+		               		<td data-label="<?php echo $tr->translate("បានបង់");?>" >&nbsp;&nbsp;<?php echo $rs["paid_amount"];?></td>
+		               		<td data-label="<?php echo $tr->translate("ប្រាក់ដើមនៅសល់ត្រូវ");?>" >&nbsp;&nbsp;<?php echo $rs["price_sold"]-$rs["paid_amount"];?></td>
+		               		<td data-label="<?php echo $tr->translate("ប្រាក់ដើមនៅសល់ក្នុងប្រព័ន្ទ");?>" >&nbsp;&nbsp;<?php echo $rs["begining_balance"];?></td>
+		                </tr>
+		                <?php }?>
+		            </table>
+            <br />
+    	</td>
+    </tr>
+</table>
+	<br />
+	 	<table align="center" width="100%">
+		   <tr style="font-size: 12px;">
+		        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+		        <th></th>
+		        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+		        <th></th>
+		        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+		   </tr>
+		</table>
+	</div>
+</div>
+  

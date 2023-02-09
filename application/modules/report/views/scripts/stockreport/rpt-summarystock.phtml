@@ -1,0 +1,365 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_search;
+
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
+	
+	$branch_title = $tr->translate("BRAND_TITLE");
+	$search=$this->search;
+?>
+<title><?php echo $tr->translate("RPT_SUMMARY_STOCK");?></title>
+<script>
+     dojo.require("dijit.form.DateTextBox");
+</script>
+	<div class="reportblog">
+		<div class="card-box">
+	       	<div class="col-sm-12 border-botom">
+		   		<div class="col-sm-8 pd-0">
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_SUMMARY_STOCK');?></h4>
+	    		</div>
+	    		<div class="col-sm-4 text-right">
+	    		</div>
+	    	</div>
+	    </div>
+		<form method="post">
+			<div class="card-box">
+		    	<div class="form-group"> 
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("branch_id");?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<input id="reportDate" />
+					</label>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="categoryId" />
+					</div>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<input id="productId" />
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					</label>
+				</div>
+			</div>
+		</form>
+		<div style="width:100%; margin:0 auto;">
+		<div style="min-height:22cm; margin:0 auto;">
+			<style>
+				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
+				.hiddenblog{display: block !important;}
+			</style>
+			<div id="divPrint">
+				<style type="text/css">
+					.style{
+						line-height: 20px;font-size: 11px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					.hideblog{display: none;}
+					.hiddenblog{display: block !important;}
+					.style1:hover{ background: #ccc; }
+					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+					table { page-break-inside:auto }
+					tr{ page-break-inside:avoid; page-break-after:auto; }
+					#header {
+					  display: table-header-group;
+					  page-break-inside:avoid; page-break-after:auto;
+					  margin-top: 100px;
+					}
+					.hide{visibility: hidden;}
+					@media print {
+					 div.divFooter {
+					    position: fixed;
+					    top: 0;
+					  	width: 100%;
+					  	height: 100px;
+					  	bottom:0px;
+						margin:0;
+					  }
+						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+						@page {size: landscape;
+							margin-left:0.2cm;
+							margin-right:0.2cm;
+						}
+					}
+					.center{text-align: center !important;}
+					table.content-data{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:11px;
+					}
+					table.content-data thead tr.style {
+					   line-height: 25px; 
+						font-size:11px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #c1d0f3;
+						font-weight:600;
+					}
+					table tr td{
+						padding:0px 2px;
+						font-family:khmer os battambang;				
+					  }
+					.lbTitle{
+						display:block;
+					    line-height:20px;
+					}
+					.lbEng{
+					    line-height:11px;
+					}
+				</style>
+				<table width="100%">
+					<tr>
+				    	<td align="center" valign="top">
+				        	<div class="divFooter">
+					        	<?php echo $this->headerReport;?>
+				            </div>
+				        </td>
+				    </tr>
+				    <tr>
+				    	<td id="exportExcel">
+				            <table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
+					                <thead>
+					                <tr class="hide" style="border:1px solid #000;">
+					                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+					                </tr>
+					                <tr class="style" align="center" >
+					                    <td scope="col" rowspan="2" class="center">ល.រ <br> No.</td>
+										<td scope="col" rowspan="2" class="center">
+											<span class="lbTitle">សាខា</span> 
+											<small class="lbEng">Project Name</small>
+										</td>
+										<td scope="col" colspan="3" class="center">
+											<span class="lbTitle">ព័ត៍មានផលិតផល</span> 
+											 <small class="lbEng">Product Info</small>
+										</td>  
+										<td  scope="col" rowspan="2" class="center">
+											<span class="lbTitle">ដើមគ្រា</span>
+											 <small class="lbEng">Begining Qty</small>
+										</td> 
+										<td scope="col" colspan="2" class="center">
+											<span class="lbTitle">ទិញចូល</span> 
+											 <small class="lbEng">Stock In Transaction</small> 
+										</td>  
+										<td scope="col" colspan="3" class="center">
+											<span class="lbTitle">ប្រតិបត្តិការស្តុកចេញ</span> 
+											<small class="lbEng"> Stock out Transaction</small> 
+										</td>  
+										<td scope="col" rowspan="2"  class="center">
+											<span class="lbTitle">ការធ្វើបច្ចុប្បន្នភាព</span> 
+											 <small class="lbEng">Adjust Stock</small>
+										</td>  
+										<td scope="col" rowspan="2" class="center">
+											<span class="lbTitle">សល់ជាក់ស្តែង</span>
+											  <small class="lbEng" >Remaining Qty</small>
+										</td>  
+					                </tr>
+					                <tr class="style" align="center">
+					                	<td scope="col" style="padding:1px; ">
+											<span class="lbTitle">ប្រភេទទំនិញ</span> 
+										 	<small class="lbEng">Product Category</small>
+										</td>                   
+					                    <td scope="col" style="padding:1px;">
+											<span class="lbTitle">លេខកូដទំនិញ</span> 
+											<small class="lbEng">Product Code</small>
+										</td>
+					                    <td scope="col" style="padding:1px;">
+											<span class="lbTitle">ឈ្មោះផលិតផល</span> 
+											<small class="lbEng">Product Name</small>
+										</td>
+
+					                    <td scope="col" style="padding:1px;">
+											<span class="lbTitle">ទិញចូល</span> 
+											<small class="lbEng">Purchesed</small>
+									 	</td>
+										<td scope="col" style="padding:1px;">
+											<span class="lbTitle">ផ្ទេរចូល</span> 
+										 	<small class="lbEng">Received Transfer</small>
+										</td>
+
+										<td scope="col" style="padding:1px;">
+											<span class="lbTitle">ដកប្រើប្រាស់</span>
+											<small class="lbEng">Usage</small>
+										</td>
+					                    <td scope="col" style="padding:1px;">
+											<span class="lbTitle">លក់ចេញ</span> 
+											<small class="lbEng">Sell Out</small>
+										</td>	                    
+					                    <td scope="col" style="padding:1px;">
+											<span class="lbTitle">ផ្ទេរចេញ</span>
+											<small class="lbEng">Transfer Out</small>
+										</td>
+					                </tr>
+					            </thead>
+				                <?php 
+				                if(!empty($this->rows)) foreach ($this->rows as $index => $rs){
+								?>
+									<tr>
+										<td align="center" data-label="ល.រ/No."><?php echo $index+1;?></td>
+										<td data-label="សាខា/Project Name"><?php echo $rs['projectName'];?></td>
+										<td data-label="ប្រភេទទំនិញ/Product Category"><?php echo $rs['categoryName'];?></td>
+										<td data-label="លេខកូដទំនិញ/Product Code"><?php echo $rs['proCode'];?></td>
+										<td data-label="ឈ្មោះផលិតផល/Product Name"><?php echo $rs['productName'].'('.$rs['measureName'].')';?></td>
+										<td data-label="ដើមគ្រា/Begining Qty"><?php echo number_format($rs['qtyBegining'],2);?></td>
+										<td data-label="ទិញចូល/Purchesed"><?php echo number_format($rs['qtyReceive'],2);?></td>
+										<td data-label="ផ្ទេរចូល/Received Transfer"><?php echo number_format($rs['qtyReceivedTransfer'],2);if($rs['qtyTransferInpending']>0){echo ' Pending('.number_format($rs['qtyTransferInpending'],2).')';};?></td>
+										<td data-label="ដកប្រើប្រាស់/Usage"><?php echo number_format($rs['qtyUsage'],2);?></td>
+										<td data-label="លក់ចេញ/Sell Out"><?php echo number_format($rs['qtySale'],2);?></td>
+										<td  data-label="ផ្ទេរចេញ/Transfer Out"><?php echo $rs['qtyTransferOut'];?></td>
+										<td data-label="ការធ្វើបច្ចុប្បន្នភាព/Adjust Stock"><?php echo number_format($rs['qtyAdjust'],2);?></td>
+										
+										<?php $currentQty = $rs['qtyBegining']+$rs['qtyReceive']+$rs['qtyReceivedTransfer']+$rs['qtyAdjust']-$rs['qtyUsage']-$rs['qtySale']-$rs['qtyTransferOut'];?>
+										
+										<td data-label="ទំនិញនៅសល់ជាក់ស្តែង/Remaining Qty"><?php echo number_format($currentQty,2);?></td>
+				                <?php }?>
+				            </table>
+				            <?php echo $this->footerReport;?>
+				    	</td>
+				    </tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	var categoryStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->categoryList));?>);
+	
+	require(["dojo/ready"], function(ready){
+		ready(function(){
+			var branchId = dijit.byId('branch_id');
+			branchId.on('change',function(evt){
+				getDatabyBranch();
+			});
+			 getDatabyBranch();
+			 
+			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_SUMMARY_STOCK");?>';
+		});
+
+		 new dijit.form.FilteringSelect({
+			 	store:categoryStore,
+				autoComplete: false,
+				queryExpr: "*${0}*",
+				required: false,		           
+				name: "categoryId",
+				placeHolder:'<?php echo $tr->translate('PRODUCT_CATEGORY');?>',
+				id: "categoryId",
+				searchAttr: "name",
+				class: 'fullside',
+				value:'<?php echo $this->search['categoryId'];?>',
+				onChange: function() {
+					getAllProduct();
+				}
+			}, "categoryId");
+			
+		 new dijit.form.FilteringSelect({
+				autoComplete: false,
+				queryExpr: "*${0}*",
+				required: false,		           
+				name: "productId",
+				placeHolder:'<?php echo $tr->translate('PRODUCT_NAME');?>',
+				id: "productId",
+				searchAttr: "name",
+				class: 'fullside',
+				onChange: function() {
+					addRowProductPO();
+				}
+			}, "productId");
+
+		 new dijit.form.FilteringSelect({
+				autoComplete: false,
+				queryExpr: "*${0}*",
+				required: false,		           
+				name: "reportDate",
+				placeHolder:'<?php echo $tr->translate('SELECT_REPORT_DATE');?>',
+				id: "reportDate",
+				searchAttr: "name",
+				class: 'fullside',
+			}, "reportDate");
+		
+	});
+function getDatabyBranch(){
+	getAllProduct();
+	getClosingDate();
+	getBranchInfo();
+	setTimeout(function () {
+      dijit.byId('productId').attr('value','<?php echo $search['productId'];?>');
+    }, 800);
+}
+	 
+function getBranchInfo(){
+	
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="max-height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+function getAllProduct(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id=='' || branch_id<=0){
+		branch_id = 0;
+	}
+	categoryId = dijit.byId('categoryId').get('value');
+	if(categoryId=='' || categoryId==0){
+		categoryId=0;
+	}
+	
+	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
+	objectContentFilter = {'branch_id':branch_id,'categoryId':categoryId};
+	getAllProductStoreFunction(urlGetAllProduct,objectContentFilter);
+	
+}
+
+function getClosingDate(){
+	var urlCloseDate = '<?php echo $this->url(array('module'=>'product','controller'=>'closingentry','action'=>'get-allclosingdate')); ?>';
+	branch_id = dijit.byId('branch_id').get('value');
+
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: urlCloseDate,
+	    handleAs:"json",	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			closingStore = getDataStorefromJSON('id','name',data);
+			dijit.byId('reportDate').set('store',closingStore);
+			if('<?php echo $this->search['branch_id'];?>'==branch_id){
+				dijit.byId('reportDate').attr('value','<?php echo $this->search['reportDate'];?>');
+				 document.getElementById('dateReport').innerHTML =''+dijit.byId('reportDate').attr('displayedValue')+'';
+			}
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

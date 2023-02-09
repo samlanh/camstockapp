@@ -1,0 +1,390 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_search;
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+
+	$montFomat=DATE_FORMAT_FOR_PHP;
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
+	
+	$branch_title = $tr->translate("BRAND_TITLE");
+	$dbAcc = new Report_Model_DbTable_DbAccountant();
+	$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+	$arrStep = array(
+			'keyIndex'=>1,//Purchase By Request
+			'typeKeyIndex'=>1,
+		);
+	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+	$arrStep = array(
+			'keyIndex'=>1,//Purchase 
+			'typeKeyIndex'=>4,
+		);
+	$purchaseTypeOPt = $dbGBstock->purchasingTypeKey($arrStep);
+	$search=$this->search;
+?>
+<title><?php echo $tr->translate("RPT_PURCHASING_LIST");?></title>
+<script>
+     dojo.require("dijit.form.DateTextBox");
+</script>
+	<div class="reportblog">
+		<div class="card-box">
+	       	<div class="col-sm-12 border-botom">
+		   		<div class="col-sm-8 pd-0">
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_PURCHASING_LIST');?></h4>
+	    		</div>
+	    		<div class="col-sm-4 text-right">
+	    		</div>
+	    	</div>
+	    </div>
+		<form method="post">
+			<div class="card-box">
+		    	<div class="form-group"> 
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("branch_id");?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("start_date");?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("end_date");?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("supplierId");?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("purchaseType");?>
+					</label>
+					
+					
+				</div>
+				<div class="form-group"> 
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					</label>
+					
+				</div>
+				
+			</div>
+		</form>
+		<div style="width:100%; margin:0 auto;">
+		<div style="min-height:22cm; margin:0 auto;">
+			<style>
+				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
+				.hiddenblog{display: block !important;}
+			</style>
+			<div id="divPrint">
+				<style type="text/css">
+					.style{
+						line-height: 20px;font-size: 11px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					.hideblog{display: none;}
+					.hiddenblog{display: block !important;}
+					.style1:hover{ background: #ccc; }
+					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+					table { page-break-inside:auto }
+					tr{ page-break-inside:avoid; page-break-after:auto; }
+					#header {
+					  display: table-header-group;
+					  page-break-inside:avoid; page-break-after:auto;
+					  margin-top: 100px;
+					}
+					.hide{visibility: hidden;}
+					@media print {
+					 div.divFooter {
+					    position: fixed;
+					    top: 0;
+					  	width: 100%;
+					  	height: 100px;
+					  	bottom:0px;
+						margin:0;
+					  }
+						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+						@page {size: A4 landscape}
+					}
+					.center{text-align: center !important;}
+					table.content-data{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:13px;
+					}
+					table.content-data thead tr.style {
+					   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #c1d0f3;
+						font-weight:600;
+					}
+					table.tb-footer{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:13px;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					table.tb-footer tr{
+					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
+					}
+					table tr td{
+						padding:0 2px;
+					}
+					tr.voidclass {
+						background: #fff7f7;
+					}
+					td.centerText{
+						text-align: center;
+					}
+					td.rightText {
+						text-align: right;
+					}
+					.redBold {
+						font-weight: 600;
+						color: #f80000;
+					}
+					
+					table.totalBottom{
+						line-height: 25px; 
+						font-size:12px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					table.totalBottom tr td{
+						padding:2px;
+						line-height: 14px;
+					}
+					table.totalBottom tr.rowHead td {
+						padding: 4px 0;
+						font-weight: 600;
+					}
+					table.totalBottom tr.rowHead td.mainCol {
+						width: 30%;
+						border-bottom: solid 1px #000;
+						border-top: solid 1px #000;
+						padding: 2px 0;
+					}
+					table.totalBottom td.blankCol {
+						width: 5%;
+					}
+					table.totalBottom td.sideCol {
+						width: 20%;
+					}
+					table.totalBottom td.valueData {
+					}
+					table.totalBottom td.valueData.totalVal {
+						font-weight: 600;
+					}
+					table.totalBottom tr.rowBottom td.mainCol {
+						border-top: solid 2px #000;
+						padding: 2px 0;
+						font-size: 12px;
+						font-weight: 600;
+					}
+				</style>
+				<table width="100%">
+					<tr>
+				    	<td align="center" valign="top">
+				        	<div class="divFooter">
+					        	<?php echo $this->headerReport;?>
+				            </div>
+				        </td>
+				    </tr>
+				    <tr>
+				    	<td id="exportExcel">
+				            <table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
+					                <thead>
+					                <tr class="hide" style="border:1px solid #000;">
+					                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+					                </tr>
+					                <tr class="style" align="center" >
+					                    <td scope="col" rowspan="2" class="center"><?php echo $tr->translate("NUM");?></td>
+										<td scope="col" colspan="5" class="center"><?php echo $tr->translate("PURCHASING_INFO");?></td>    
+					                    <td scope="col" colspan="6" class="center"><?php echo $tr->translate("REQUEST_INFO");?></td>    
+					                   
+					                    <td scope="col" colspan="4" class="center"><?php echo $tr->translate("OTHER");?></td>    
+					                 
+					                </tr>
+					                <tr class="style" align="center">
+					                	<td scope="col" style="padding:1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>                   
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("PO_NO");?></td>
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("SUPPLIER");?></td>
+										<td scope="col" style="padding:1px;"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
+					                   
+										<td scope="col" style="padding:1px;"><?php echo $tr->translate("REQUEST_NO");?></td>
+										<td scope="col" style="padding:1px;"><?php echo $tr->translate("REQUEST_DATE");?></td>
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("PURPOSE");?></td>	                    
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("REQUEST_NO_FROM");?></td>
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("NOTE");?></td>
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("REQUEST_BY");?></td>
+										
+					                    
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("PURCHASING_PURPOSE");?></td>
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("NOTE");?></td>
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("TYPE");?></td>
+					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("BY");?></td>
+					                </tr>
+					            </thead>
+				                <?php 
+				                	$totalRecord=count($this->row);;
+				                	$gTotalAmount=0;
+				                	$i=1;
+				                ?>
+				                <?php 
+				                if(!empty($this->row)) foreach ($this->row as $index => $rs){
+									$gTotalAmount=$gTotalAmount+$rs["total"];
+									
+								?>
+				                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="context-menu-one style " style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+				               		<td data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;"><?php echo $i++; ?></td>
+				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" ><?php echo $rs["branch_name"];?></td>
+				               		<td data-label="<?php echo $tr->translate("PO_NO");?>"  class="centerText redBold"><?php echo $rs["purchaseNo"];?></td>      
+									<td data-label="<?php echo $tr->translate("DATE");?>"  class="centerText"><?php echo date($montFomat,strtotime($rs["date"]));?></td>
+									<td data-label="<?php echo $tr->translate("SUPPLIER");?>" ><?php echo $rs["supplierName"];?></td>
+									<td data-label="<?php echo $tr->translate("TOTAL");?>"  class="rightText"><?php echo number_format($rs["total"],3);?></td>
+									
+									<?php if($rs["purchaseType"]==$purchaseType){?>
+				               		<td data-label="<?php echo $tr->translate("REQUEST_NO");?>" ><?php echo $rs["requestNo"];?></td>                 		
+				               		<td data-label="<?php echo $tr->translate("REQUEST_DATE");?>"  class="centerText"><?php echo date($montFomat,strtotime($rs["requestDate"]));?></td>
+				               		<td data-label="<?php echo $tr->translate("PURPOSE");?>" ><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["purposeRequest"];?></span></td>
+				               		<td data-label="<?php echo $tr->translate("REQUEST_NO_FROM");?>" ><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["requestNoLetter"];?></span></td>
+				               		<td data-label="<?php echo $tr->translate("NOTE");?>" ><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["requestNote"];?></span></td>
+									<td data-label="<?php echo $tr->translate("REQUEST_BY");?>"  class="centerText"><?php echo $rs["requestName"];?></td>
+									<?php }else{?>
+									<td data-label="<?php echo $tr->translate("REQUEST_NO");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("REQUEST_DATE");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("PURPOSE");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("REQUEST_NO_FROM");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("NOTE");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("REQUEST_BY");?>" class="centerText">-</td>
+									<?php }?>
+									<td data-label="<?php echo $tr->translate("PURCHASING_PURPOSE");?>" ><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["purpose"];?></span></td>
+									<td data-label="<?php echo $tr->translate("NOTE");?>" ><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["note"];?></span></td>
+									
+									<td data-label="<?php echo $tr->translate("TYPE");?>"  class="centerText"><?php echo $rs["purchaseTypeTitle"];?></td>
+									<td data-label="<?php echo $tr->translate("BY");?>"  class="centerText"><?php echo $rs["byUser"];?></td>
+								</tr>
+				                <?php }?>
+				               
+				            </table>
+							<br />
+				            <table class="totalBottom" style="width:100%;">
+								<tr class="rowHead">
+									<td class="sideCol"></td>
+									
+									<td class="mainCol centerText"><?php echo $tr->translate("AMT_RECORD");?></td>
+									<td class="blankCol">&nbsp;</td>
+									
+									<td class="mainCol centerText"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
+									<td class="sideCol"></td>
+								</tr>
+								<?php if(!empty($purchaseTypeOPt)) foreach($purchaseTypeOPt AS $rsInv){ 
+									$search['rowPurchaseType']=$rsInv['id'];
+									$rsRows = $dbAcc->getAllPurchasingSumByType($search);		
+								?>
+								<tr>
+									<td class="rightText"><?php echo $rsInv['name'];?></td>
+									<td class="valueData centerText"><?php echo sprintf('%02d',$rsRows['amountRow']);?></td>
+									<td></td>
+									<td class="valueData centerText"><?php echo number_format($rsRows['totalAmount'],3);?></td>
+									<td></td>
+									
+								</tr>
+								<?php }?>
+								<tr class="rowBottom">
+									<td class="sideCol"></td>
+									<td class="mainCol centerText"><?php echo sprintf('%02d',$totalRecord);?></td>
+									<td class="blankCol">&nbsp;</td>
+									<td class="mainCol centerText"><?php echo number_format($gTotalAmount,3);?></td>
+									<td class="sideCol"></td>
+								</tr>
+							</table>
+							<br />
+						    <?php echo $this->footerReport;?>
+				    	</td>
+				    </tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<?php 
+	$urlPurchaseletter = $this->baseUrl()."/report/stockmg/purchase-letter/id/";
+	$urlPurchaseInfo = $this->baseUrl()."/report/stockmg/purchase-info/id/";
+?>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	require(["dojo/ready"], function(ready){
+		ready(function(){
+			 
+			 getBranchInfo();
+			 
+			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_PURCHASING_LIST");?>';
+			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';
+		});
+		
+	});
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+
+
+var row=0;
+var poType=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			
+			var m = "clicked: " + key;
+			if(key=="purchaseLetter"){
+				url='<?php echo $urlPurchaseletter;?>';
+			}else if(key=="purchaseInfo"){
+				url='<?php echo $urlPurchaseInfo;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"purchaseLetter": {name: "<?php echo $tr->translate("PURCHASE_LETTER");?>", icon: "fa-file-text", accesskey: "c"},
+			"purchaseInfo": {name: "<?php echo $tr->translate("PURCHASE_INFO_DETAIL");?>", icon: "fa-file-text"},
+		}
+	});
+});
+function setrowdata(index){
+	
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
+</script>

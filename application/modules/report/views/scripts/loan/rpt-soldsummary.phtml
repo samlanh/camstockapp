@@ -1,0 +1,674 @@
+<?php 
+	$filter = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$url = $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-groupmember'));
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		//$branch_title = $branch['project_name'];
+	}
+	$is_showhouse = $this->data['showhouseinfo'];
+	$showOtherDis = OTHER_DIS_OPTION;
+	$showEditSchedule = SHOW_EDIT_SCHEDULE;
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
+?>
+<meta charset="utf-8">
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data  tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+</style>
+<title><?php echo $tr->translate("RPT_SOLDSUMMARY");?></title>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_SOLDSUMMARY');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+    <form method="post">
+	    <div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('adv_search');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('branch_id');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<input id="land_id" />
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('property_type');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('streetlist');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('client_name');?>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php 
+						echo $filter->getElement('sale_status');
+					?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('buy_type');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('schedule_opt');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('start_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('end_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('agency_id');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('queryOrdering');?>
+				</div>
+			</div>
+	    </div>
+    </form>
+	<div id="divPrint" style="margin: 0 auto;">
+	<style>
+
+		.hover:hover{ background: #ccc;}
+		table {font-family:'Times New Roman','Khmer OS Battambang'; }
+		table.content-data { page-break-inside:auto }
+		table.content-data tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+		th{padding: 5px;}
+		.hover td{padding: 1px;}
+		.hide{visibility: hidden;}
+		@media print {
+		  div.divFooter {
+		    position: fixed;
+		    top: 0;
+		  	width: 100%;
+		  	height: 100px;
+		  	bottom:0px;
+			margin:0;
+		  }
+			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+		}
+		.divFooter table{
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			margin:0; 
+			padding:0; 
+			border:none;
+		}
+		table.content-data{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-size:13px;
+
+			width:100%;
+		}
+		table.content-data thead tr.style {
+		   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+		   background: #ccd9ff;
+			text-align: center;
+		}
+
+		table.content-data  tr.style {
+		  
+		    white-space: nowrap;
+			line-height: 20px;
+		  
+		}
+		
+		table.tb-footer{
+		border-collapse:collapse;
+		border:1px solid #000; 
+		font-size:13px;
+		}
+		table.tb-footer tr{
+		 line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;
+		}
+		.border_bottom {
+			border-bottom: 2px solid #000;
+		}
+		table tr td{
+			padding:0 1px;
+		}
+		/*
+		.style-head{
+			line-height: 20px;font-size: 14px !important;
+			font-family:'Times New Roman','Khmer OS Battambang';
+		}
+		table { page-break-inside:auto }
+		tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px;}
+		th{padding: 5px;}
+		.hover td{padding: 2px;}
+		.hide{visibility: hidden;}
+		@media print {
+			div.divFooter {
+				position: fixed;
+				top: 0;
+				width: 100%;
+				height: 100px;
+				bottom:0px;
+				margin:0;
+			}
+			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+		}
+		table.content-data{
+			border-collapse:collapse;
+			width:100%;
+			border:1px solid #000; 
+			font-family:'Times New Roman','Khmer OS Battambang';
+			font-size:12px;
+			white-space: nowrap;
+			margin:0 auto;
+		}
+		table.content-data tr.style-head {
+		   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+			background: #ccd9ff;
+			text-align: center;
+		}
+		table.content-data tr.style-rowdata {
+			font-size:12px; 
+			height: 23px;
+		}
+		table.content-data td {
+			padding: 2px;
+		}
+		.border_bottom{
+			border-bottom:2px solid #000;
+		}
+		tr.style-rowdata.hover.context-menu-one.completedCss {
+			background: #00e01c0d;
+		}
+		table tr td{
+			padding:0 2px;
+		}
+		*/
+	</style>
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
+		<tr>
+	    	<td align="center">
+	        	<div class="divFooter">
+		        	<?php echo $this->headerReport;?>
+	            </div>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td id="exportExcel">
+	            <table class="content-data" border="1"​ cellspacing="0">
+	               <thead>
+	                 <tr class="hide" style="border:1px solid #000;">
+		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+		             </tr>
+	                 <tr class="style" align="center">
+					  <?php 
+					  $colspan=8;
+					  if($is_showhouse==0){
+						   $colspan=9;
+					  }?>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
+						<td scope="col" colspan="<?php echo $colspan;?>"><?php echo $tr->translate("SALE_INFO");?></td>
+						<td scope="col" colspan="4"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("AGENTCY");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("STATUS");?></td>
+					 </tr>
+	                 <tr class="style" align="center">
+	                    <td  scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+	                    <?php if($is_showhouse==0){?>
+	                    	<td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
+	                    <?php }?>
+						
+	                    <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("END_DATE");?></td>
+	                   
+	                    
+	                    <td scope="col"><?php echo $tr->translate("PRICE_BEFORE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("DISCOUNT");?>$</td>
+	                    <td scope="col"><?php echo $tr->translate("DISCOUNT_PERCENT");?></td>
+	                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>
+						<td scope="col"><?php echo $tr->translate("TYPE");?></td>
+						
+	                    <td scope="col"><?php echo $tr->translate("PAID_PRINCIPAL");?></td>
+	                    <td scope="col"><?php echo $tr->translate("REMAIN");?></td>
+	                    <td scope="col"><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+	                    <td scope="col"><?php echo $tr->translate("TOTAL_PENELIZE");?></td>
+	                   
+	                   
+	               	 </tr>
+	              </thead>
+	               <?php 
+	               $amount_property=0;
+	               $property_deposit = 0;
+	               $property_payoff = 0;
+	               $property_install = 0;
+	               $property_paybank= 0 ;
+	               
+	               $link="#";
+	               $payment_1=0;$payment_2=0;$payment_3=0;$payment_5=0;
+	               
+	               $payment_0_completed=0;//for deposit;
+	               $payment_1_completed=0;
+	               $payment_2_completed=0;
+	               $payment_3_completed=0;
+	               $payment_5_completed= 0;
+	               $sold_price=0;
+	               $paid_price=0;
+	               $balace_price=0;
+	               $price_before=0;
+	               $discount_amount = 0;
+	               $disc_percent=0;
+	               $total_interest = 0;
+	               $total_panelty = 0;
+	               $db  = new Report_Model_DbTable_DbParamater();
+	               $key=0;
+	              
+	               if(!empty($this->loanrelease_list))foreach($this->loanrelease_list as $key =>$row){?>
+	               <?php 
+	               		$row['totalAmountCreadit'] = empty($row['totalAmountCreadit'])?0:$row['totalAmountCreadit'];
+	               		$notupdateLock="";
+		               if(!empty($row['old_land_id'])){
+			               	$idse = explode(",", $row['old_land_id']);
+			               	$countland = count($idse);
+			               	/*//for check land not update lock
+							if (!empty($idse)) foreach ($idse as $pro_id){
+			               		if (empty($notupdateLock)){
+			               			$notupdateLock = $db->checkLandSaleNotUpdateLock($pro_id);
+			               		}else{
+			               			$notupdateLock = $notupdateLock.",".$db->checkLandSaleNotUpdateLock($pro_id);
+			               		}
+			               		
+			               	}
+							*/
+			               	$amount_property = $amount_property+$countland;
+			               	if($row['payment_id']==1){//កក់
+			               		$property_deposit=$property_deposit+$countland;
+			               	}elseif($row['payment_id']==2 OR $row['payment_id']==6){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
+			               		$property_payoff=$property_payoff+$countland;
+			               	}elseif($row['payment_id']==5){//បង់ជាមួយធនាគារ
+			               		$property_paybank = $property_paybank+$countland;
+			               	}elseif($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==7){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
+			               		$property_install=$property_install+$countland;
+			               	}
+		               }else{
+		               		$amount_property = $amount_property+1;
+		               		if($row['payment_id']==1){//កក់
+		               			$property_deposit=$property_deposit+1;
+		               		}elseif($row['payment_id']==2 OR $row['payment_id']==6){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
+		               			$property_payoff=$property_payoff+1;
+		               		}elseif($row['payment_id']==5){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
+		               			$property_paybank=$property_paybank+1;
+		               		}
+		               		elseif($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==7){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
+		               			$property_install=$property_install+1;
+		               		}
+		               		$countland = 1;
+		               		//$notupdateLock = $db->checkLandSaleNotUpdateLock($row['house_id']);
+		               }
+		               
+		               $price_before = $price_before+$row['price_before'];
+		               
+		               $other_discount = empty($row['other_discount'])?0:$row['other_discount'];
+		               $discount_amount = $discount_amount+$row['discount_amount']+$other_discount;
+		               $disc_percent = $disc_percent+($row['price_before']-$row['price_sold']-$row['discount_amount']-$row['other_discount']);
+		               $sold_price=$sold_price+$row['price_sold'];
+		               
+// 		               $paid_price=$paid_price+$row['paid_amount'];
+// 		               $balace_price=$balace_price+($row['price_sold']-$row['paid_amount']);
+
+		               $paid_price=$paid_price+$row['paid_amount']+$row['totalAmountCreadit'];
+		               $balace_price=$balace_price+($row['price_sold']-($row['paid_amount']+$row['totalAmountCreadit']) );
+		               
+		               $total_interest = $total_interest+$row['total_interest_permonthpaid'];
+		               $total_panelty = $total_panelty+$row['penalize_amountpaid'];
+		               
+		               
+		               if(empty($row['paid_amount'])){
+		               		$row['paid_amount']=0;
+		               }
+		               $paidAmount = $row['paid_amount']+$row['totalAmountCreadit'];
+					   $classComplete="";
+		               if($row['payment_id']==1){//កក់
+		               	 $payment_1=$payment_1+1;
+// 		               	 if($row['price_sold']<=$row['paid_amount']){
+		               	 if($row['price_sold']<=$paidAmount){
+		               	 	$payment_0_completed=$payment_0_completed+1;
+							$classComplete="completedCss";
+		               	 }
+		               }elseif($row['payment_id']==2 OR $row['payment_id']==6){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
+		               	 	$payment_2=$payment_2+1;
+// 		               	 if($row['price_sold']<=$row['paid_amount']){
+		               	 if($row['price_sold']<=$paidAmount){
+		               	 	$payment_2_completed=$payment_2_completed+1;
+							$classComplete="completedCss";
+		               	 }
+		               }elseif($row['payment_id']==5){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
+			               	$payment_5=$payment_5+1;
+// 			               	if($row['price_sold']<=$row['paid_amount']){
+			               	if($row['price_sold']<=$paidAmount){
+			               		$payment_5_completed =$payment_5_completed+1;
+								$classComplete="completedCss";
+			               	}
+		               }
+		               elseif($row['payment_id']==3 OR $row['payment_id']==4 || $row['payment_id']==7){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
+		               	 $payment_3=$payment_3+1;
+// 		               	 if($row['price_sold']<=$row['paid_amount']){
+		               	 if($row['price_sold']<=$paidAmount){
+		               	 	$payment_3_completed=$payment_3_completed+1;
+							$classComplete="completedCss";
+		               	 }
+		               }         
+		             ?>
+	             <?php 
+	              	$payment_id = $row['payment_id'];
+	              	?>
+	              	<tr class="style hover context-menu-one <?php echo $classComplete; ?>" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
+						<td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
+						<td data-label="<?php echo $tr->translate("CUSTOMER_INFO");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; padding:2px 0;" ><?php echo $row['name_kh']; if(!empty($row['phone'])){ echo "<span style='display: block; line-height: 14px;' />".$row['phone'];}?></span></span></td>
+						<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600; padding:2px 0;" ><?php echo $row['land_address']." ".$row['street']; ?></span></td>
+						<?php if($is_showhouse==0){?>
+						 <td data-label="<?php echo $tr->translate("AMOUNT_PROPERTY");?>" align="center"><?php echo $countland." ".$notupdateLock; ?></td>
+						<?php }?>
+						
+						<td data-label="<?php echo $tr->translate("BUY_DATE");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?></td>
+						<td data-label="<?php echo $tr->translate("END_DATE");?>" style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?></td>
+						
+						
+						<td data-label="<?php echo $tr->translate("PRICE_BEFORE");?>" align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span></td>
+						<td data-label="<?php echo $tr->translate("DISCOUNT");?>" align="right" style="white-space:nowrap;"><?php 
+						$other_discount = empty($row['other_discount'])?0:$row['other_discount'];		
+						echo number_format($row['discount_amount']+$other_discount,2); ?></td>	
+						<td data-label="<?php echo $tr->translate("DISCOUNT_PERCENT");?>" align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>
+						
+						
+						<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
+						<td data-label="<?php echo $tr->translate("TYPE");?>"><?php echo $row['paymenttype']; ?></td>
+						<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" align="right" style="white-space:nowrap; text-align: right;"><?php echo number_format($paidAmount,2);//echo number_format($row['paid_amount'],2);?></td>
+						<td data-label="<?php echo $tr->translate("REMAIN");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmount,2); //echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
+						<td data-label="<?php echo $tr->translate("TOTAL_INTEREST");?>" align="right"><?php echo number_format($row['total_interest_permonthpaid'],2);?></td>
+						<td data-label="<?php echo $tr->translate("TOTAL_PENELIZE");?>" align="right"><?php echo number_format($row['penalize_amountpaid'],2);?></td>
+						
+						<td data-label="<?php echo $tr->translate("AGENTCY");?>"><?php echo $row['agency_name']; ?></td>
+						<td data-label="<?php echo $tr->translate("STATUS");?>"><?php  if($row['is_cancel']==1){ echo "បោះបង់";} ?></td>
+						<!-- <td align="center" title='<?php echo ($row['verify_by']>0 ? 'Authorized':'Unauthorized');?>'><img  src="<?php echo $this->baseUrl().'/images/icon/'.($row['verify_by']>0 ? 'apply2.png':'none.png'); ?>" /></td>
+						 -->
+						<?php 
+// 							$percent = $db->getFirstDepositBySaleID($row['id'],$row['payment_id']);
+// 							$percent =$percent['percent'];
+						?>
+					</tr>
+					<?php }?>
+					<tr class="style" style=" text-align: center; background:#87acff;">
+						<td colspan="4"></td>
+						<td><?php echo $key>0?$key+1:0;?></td>
+						<?php if($is_showhouse==0){?>
+							<td><?php echo $amount_property;?></td>
+						<?php }?>
+						<td><?php echo number_format($price_before,2);?></td>
+						<td><?php echo number_format($discount_amount,2);?></td>
+						<td><?php echo number_format($disc_percent,0);?></td>
+						<td><?php echo number_format($sold_price,2);?></td>
+						<td></td>
+						<td><?php echo number_format($paid_price,2);?></td>
+						<td><?php echo number_format($balace_price,2);?></td>
+						<td><?php echo number_format($total_interest,2);?></td>
+						<td><?php echo number_format($total_panelty,2);?></td>
+						<td colspan="3" ></td>
+					</tr>
+            		<tr>
+            			<td colspan="17" style="border: #fff solid 1px;border-top: solid 1px #000;"><br />
+			             <table class="content-data" style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
+			                 <thead>
+							 <tr bgcolor="#a0baf5" class="style" >
+			                    <td scope="col" align="right"></td>
+			                    <td scope="col"></td>
+			                    <td scope="col" align="right"><span class="border_bottom"><?php echo $tr->translate("ប្រភេទបង់");?></span></td>
+			                    <td scope="col"><span class="border_bottom">លក់បាន</span></td>
+			                    <?php 
+			                   	 if($is_showhouse==0){?>
+			                     	<td><span class="border_bottom"><?php echo $tr->translate("AMOUNT_PROPERTY");?></span></td>
+			                    <?php }?>
+			                    <td scope="col" align="left"><span class="border_bottom">ដាច់</span></td>
+			                    <td scope="col" align="left"><span class="border_bottom">នៅសល់</span></td>
+			                 </tr>
+							 </thead>
+			                 <tr bgcolor="#a0baf5" class="style" >
+			                    <td align="right">
+			                    	<?php echo $tr->translate("PROPERTY");?>
+			                    </td>
+			                    <td><?php echo $amount_property; ?>
+			                    </td>
+			                    <td align="right"><?php echo $tr->translate("កក់ទ្រនាប់ដៃ");?></td>
+			                    <td><?php echo ($payment_1);?></td>
+			                    <?php if($is_showhouse==0){?>
+			                    	<td><?php echo $property_deposit;?></td>
+			                    <?php }?>
+			                    <td><?php echo ($payment_0_completed);?></td>
+			                    <td><?php echo ($payment_1-$payment_0_completed);?></td>
+			                 </tr>
+			                 <tr bgcolor="#a0baf5" class="style" >
+			                    <td align="right">តម្លៃដី/ផ្ទះសរុប$</td>
+			                    <td><?php echo number_format($sold_price,2);?></td>
+			                    <td align="right"><?php echo $tr->translate("បង់ផ្តាច់");?></td>
+			                    <td><?php echo $payment_2;?></td>
+			                     <?php if($is_showhouse==0){?>
+			                    	<td><?php echo $property_payoff;?></td>
+			                    <?php }?>
+			                    <td><?php echo $payment_2_completed;?></td>
+			                    <td><?php echo $payment_2-$payment_2_completed; ?></td>
+			                 </tr>
+			                 <tr bgcolor="#a0baf5" class="style" >
+			                    <td align="right"><?php echo $tr->translate("ប្រាក់ដើមបានបង់សរុប");?>$</td>
+			                    <td><?php echo number_format($paid_price,2);?></td>
+			                    <td align="right"><?php echo $tr->translate("រំលស់");?></td>
+			                    <td><?php echo $payment_3;?></td>
+			                    <?php if($is_showhouse==0){?>
+			                    	<td><?php echo $property_install;?></td>
+			                    <?php }?>
+			                    <td><?php echo $payment_3_completed;?></td>
+			                    <td><?php echo $payment_3-$payment_3_completed;?></td>
+			                 </tr>
+			                 <tr bgcolor="#a0baf5" class="style"  >
+			                    <td align="right"><?php echo $tr->translate("ប្រាក់នៅសល់");?>$</td>
+			                    <td><?php echo number_format($balace_price,2);?></td>
+			                    <td align="right"><?php echo $tr->translate("BANK_SCHEDULE");?></td>
+			                    <td style="border-bottom: 4px double #000;"><?php echo $payment_5;?></td>
+			                 	 <?php if($is_showhouse==0){?>
+			                    	<td style="border-bottom: 4px double #000;"><?php echo $property_paybank;?></td>
+			                    <?php }?>
+			                 	<td style="border-bottom: 4px double #000;"><?php echo $payment_5_completed;?></td>
+			                    <td style="border-bottom: 4px double #000;"><?php echo $payment_5-$payment_5_completed;;?></td>
+			                 </tr>
+			                  <tr bgcolor="#a0baf5" class="style"  >
+			                    <td align="right"></td>
+			                    <td></td>
+			                    <td align="right"><?php echo $tr->translate("លក់សរុប");?></td>
+			                    <td style="border-bottom: 4px double #000;"><?php echo $payment_1+$payment_2+$payment_3+$payment_5;?></td>
+			                 	<?php if($is_showhouse==0){?>
+			                    	<td style="border-bottom: 4px double #000;"><?php echo $amount_property;?></td>
+			                    <?php }?>
+			                 	<td style="border-bottom: 4px double #000;"><?php echo $payment_0_completed+$payment_2_completed+$payment_3_completed+$payment_5_completed;?></td>
+			                    <td style="border-bottom: 4px double #000;"><?php echo ($payment_1+$payment_2+$payment_3+$payment_5)-($payment_0_completed+$payment_2_completed+$payment_3_completed+$payment_5_completed); ?></td>
+			                 </tr>
+			              </table>
+			              </td>
+			            </tr>
+	              </table>
+	              <br />
+	              <?php echo $this->footerReport;?>
+	    	</td>
+	    </tr>
+	</table>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getAllPropertyBranch();
+		  getBranchInfo();
+		  
+		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_SOLDSUMMARY");?>';
+		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
+	});
+	new dijit.form.FilteringSelect({
+		store: property_store,
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside fullside50',
+		onChange: function() {
+			land_id=-1;
+	}
+	}, "land_id");		 
+});
+land_id = '<?php echo $this->search['land_id']?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id<0){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		    
+		    if(land_id>0){
+		    	dijit.byId('land_id').attr('value',land_id);
+			 }
+		},
+		error: function(err) {
+		}
+	});
+} 
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="agreement"){
+				url='<?php echo $this->baseUrl()."/report/paramater/rpt-agreement/id/";?>';
+			}else if(key=="reschedule"){
+				url='<?php echo $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";?>';
+			}else if(key=="edit"){
+				url='<?php echo $this->baseUrl()."/loan/index/rpt-updatepayment/id/";?>';
+			}
+			else if(key=="editstatus"){
+				url='<?php echo $this->baseUrl()."/report/loan/rpt-updatestatus/id/";?>';
+			}
+			else if(key=="authorize"){
+				url='<?php echo $this->baseUrl()."/report/loan/sale-authorize/id/";?>';
+			}
+			else if(key=="payment"){
+				url='<?php echo $this->baseUrl()."/report/loan/paymenthistory/id/";?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"agreement": {name: "<?php echo $tr->translate("AGREEMENT");?>", icon: "fa-file-text", accesskey: "c"},
+			"reschedule": {name: "<?php echo $tr->translate("SCHEDULE_PAYMENT");?>", icon: "fa-calendar"},
+			<?php if($showEditSchedule==1){?>
+			"edit": {name: "<?php echo $tr->translate("EDIT_SCHEDULE");?>", icon: "fa-money", accesskey: "c o p y"},
+			<?php }?>
+			//"editstatus": {name: "<?php echo $tr->translate("កែស្ថានការណ៍");?>", icon: "fa-money", accesskey: "c o p y"},
+			//"authorize": {name: "<?php echo $tr->translate("Authorize");?>", icon: "fa-users", accesskey: "c o p y"},
+			"payment": {name: "<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>", icon: "fa-money", accesskey: "c o p y"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

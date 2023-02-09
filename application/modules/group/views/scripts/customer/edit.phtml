@@ -1,0 +1,242 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_CUSTOMER_REQUIREMENT'));
+?>	
+<?php  $frm = $this->frm_customer;?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.Dialog");
+	dojo.require("dijit.form.TextArea");
+</script>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_CUSTOMER_REQUIREMENT');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<div class="card-box">
+    		<form id='edit_customer' action="<?php echo $this->url(array('module'=>'group','controller'=>'customer','action'=>'edit')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+				<script type="dojo/method" event="onSubmit">			
+					if(this.validate()) {
+						loadingBlock();
+						dijit.byId('save_new').set('disabled',true);
+						return true;
+					} else {
+						return false;
+					}
+				</script>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CUSTOMER_REQUIREMENT')?> </p>
+											
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('date');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("CUSTOMER_NAME");?>*</strong>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('name');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('phone');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("KNOW_BY");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('know_by');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("FROM_PRICE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('from_price');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TO_PRICE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('to_price');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUIREDMENT");?> <span class="required"></span> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('requirement');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_TYPE");?> <span class="required"></span> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('type');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DESCRIPTION");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('description');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS_REQ");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('statusreq');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                </div>
+               <div class="col-md-6 col-sm-6 col-xs-12">
+               		<?php if (!empty($this->history )){?>
+	               		<div class="card-blogform">
+							<div class="card-body"> 
+								<div class="row"> 
+									<div class="col-md-12 col-sm-12 col-xs-12"> 
+										<div class="d-flex"> 
+											<div class="settings-main-icon ">
+												<i class="glyphicon glyphicon-phone-alt" aria-hidden="true"></i>
+											</div> 
+											<div class="col-md-10 col-sm-10 col-xs-12"> 
+												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CONTACT_HISTORY')?> </p>
+											</div> 
+										</div>
+										<br />
+										<div class="form-group">
+											<table class="history-record responsiveTable" >
+												<thead>
+													<tr>
+														<th scope="col"><?php echo $tr->translate("NUM");?></th>
+														<th scope="col"><?php echo $tr->translate("CONTACT_DATE");?></th>
+														<th scope="col" style="width: 150px;"><?php echo $tr->translate("FEEDBACK");?></th>
+														<th scope="col"><?php echo $tr->translate("NEXT_DATE_CONTACT");?></th>
+														<th scope="col"><?php echo $tr->translate("CONTACT_BY");?></th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php foreach ($this->history as $key => $record){?>
+													<tr>
+														<td data-label="<?php echo $tr->translate("NUM");?>" align="center">&nbsp;<?php echo $key+1;?>&nbsp;</td>
+														<td data-label="<?php echo $tr->translate("CONTACT_DATE");?>" align="center">&nbsp;<?php echo date("d/m/Y",strtotime($record['contact_date']))?>&nbsp;</td>
+														<td data-label="<?php echo $tr->translate("FEEDBACK");?>" align="left">&nbsp;<?php echo $record['feedback'];?>&nbsp;</td>
+														<td data-label="<?php echo $tr->translate("NEXT_DATE_CONTACT");?>" align="center">&nbsp;<?php echo date("d/m/Y",strtotime($record['next_contact']))?>&nbsp;</td>
+														<td data-label="<?php echo $tr->translate("CONTACT_BY");?>" align="center">&nbsp;<?php echo $record['user_contact_name'];?>&nbsp;</td>
+													</tr>
+													<?php }?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+		                <?php }?>
+	               </div>
+	                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+			    		<input type="reset" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" /> 
+						<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" /> 
+		    		</div>
+			</form>
+    	</div>
+    </div>
+</div>
+<style>
+table.history-record {
+    width: 100%;
+    font-size: 12px;
+}
+table.history-record thead tr th {
+    text-align: center;
+    padding: 5px 2px;
+    background: #e0eafb;
+    border-bottom: solid 1px #afadad;
+}
+table.history-record tbody tr {
+    border-bottom: solid 1px #e8e8e8;
+}
+table.history-record tbody tr td {
+    padding: 5px;
+	vertical-align: top;
+}
+</style>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("STATUS_REQ")?>'"  id="frm_statusreq" >
+		<form id="form_propertytype" >
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="newstatusreq" name="newstatusreq" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" id="save_status" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewstatusreq();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+function showstatusreq(){
+	statusreq = dijit.byId('statusreq').get('value');
+	if(statusreq==''){
+		alert("<?php echo $tr->translate("PLEASE_SELECT_STATUS")?>");
+		dijit.byId('statusreq').focus();
+		return false;
+	}else if(statusreq==-1){
+		dijit.byId('frm_statusreq').show();
+	}
+}
+var statusreqStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->statusreq));?> );
+function addNewstatusreq(){
+	if(dijit.byId('frm_statusreq').validate()){
+		dijit.byId('save_status').set('disabled',true);
+		var Itemmake = {					
+				id: dijit.byId('newstatusreq').get('value'),
+			    name: dijit.byId('newstatusreq').get('value')
+		};		
+		addDataToSelectbox(dijit.byId('statusreq'), statusreqStore, Itemmake, dijit.byId('newstatusreq').get('value'));	
+		dijit.byId('newstatusreq').attr('value',dijit.byId('newstatusreq').get('value'));
+		dijit.byId('frm_statusreq').reset();
+		dijit.byId('frm_statusreq').hide();
+		dijit.byId('save_status').set('disabled',false);
+	}
+}
+
+</script>

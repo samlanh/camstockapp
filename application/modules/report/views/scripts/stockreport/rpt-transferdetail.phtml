@@ -1,0 +1,400 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate("RPT_TRANSFER_DERTAIL")); 
+	echo $this->headTitle();
+	
+	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
+	$dbparmeter = new Report_Model_DbTable_DbParamater();
+
+?>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_TRANSFER_DERTAIL');?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<div class="card-box">
+		<div id="divPrint">
+		<style>
+				table.tableTop tr td,span {
+					font-size:12px ;
+					font-family: 'Times New Roman','Khmer OS Battambang';
+				}
+				table.tableTop tr td span.project-name{
+					font-size:12px ;
+					font-family:"Times New Roman","Khmer OS Muol Light";
+				}
+				table tr td{
+					padding:0 2px;
+					line-height: 14px;
+				}
+				table.content-data{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-size:13px;
+				}
+				table.content-data thead tr.style {
+				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #c1d0f3;
+					font-weight:600;
+				}
+				table.content-data  tr.regurlar {
+					background: #eee;
+				}
+				table.content-data tr td{
+					padding:5px 3px; 
+					border:1;
+					vertical-align:middle;
+				}
+				table.content-data tr.headRow td{
+					border:solid 1px #000;
+					padding:10px 2px; 
+					vertical-align:middle;
+				}
+				.content-data tr.headRow td span {
+					display: block;
+					line-height: 14px;
+				}
+				.content-data tr.headRow td small {
+					display: block;
+					line-height: 12px;
+					font-size: 10px;
+				}
+
+				table.requestInfo {
+					width: 100%;
+					margin-top: 10px;
+				}
+				table.requestInfo tr td {
+					vertical-align: top;
+				}
+				table.requestInfo span.lbTitle {
+					line-height: 14px;
+					float: left;
+					vertical-align: top;
+					min-width: 20%;
+				}
+				table.requestInfo span.lbTitle small {
+					display: block;
+					font-style: italic;
+					font-weight: 200;
+					line-height: 10px;
+				}
+				table.requestInfo tr td span {
+					line-height: 14px;
+					vertical-align: top;
+					min-width: 75%;
+				}
+				td.centerText{
+						text-align: center;
+				}
+				.bold {
+					font-weight: 600;
+				}
+				
+				div.borderTop{
+					border-top:1px dotted #000;
+					margin: 20px 30px;
+					padding-top:10px;
+					font-weight:bold;
+					text-align: center;
+				}
+				.footerLableTitle{font-weight: bold; padding-top: 10px;}
+				
+				span.rowValue {
+					display: block;
+					line-height: 14px !important;
+				}
+
+				span.rowValue span {
+					line-height: inherit;
+				}
+				a.colorInherit {
+					color: inherit;
+					text-decoration:none;
+				}
+				.greenClass {
+					color: #017236;
+				}
+				.centerText{
+					text-align: center;
+				}
+				.signatureImg{
+					height:50px;
+					position:relative;
+					margin-bottom: -15px;
+				}
+			</style>
+			<?php $result = $this->row; ?>
+				
+			<table class="tableTop" width="100%" >
+				<tr>
+					<td width="30%" id="projectlogo">
+						<br />
+						<img style="height:85px; max-width: 100%;" src="">
+					</td>
+					<td width="40%" valign="top" style=" padding-bottom: 40px;">
+					</td>
+					<td width="30%" align="right" style="vertical-align:top; position: relative;">
+						<span class="project-name" id="projectName"></span>
+						<?php echo $this->printByFormat;?>
+					</td>
+				</tr> 
+				<tr>
+					<td colspan="3" align="center" style="position: relative;">
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >ប័ណ្ណផ្ទេរទំនិញចេញ</span>
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";display: block;line-height: 16px;text-transform: uppercase;font-weight: 600;' >Transfering Letter</span>
+						
+						
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" style="position:relative;" >
+					<?php 
+						$result = $this->row;
+					?>
+					
+						<table class="requestInfo">
+							<tr>
+								<td width="40%">
+									<span class="lbTitle">
+										គម្រោង : 
+										<small>Project : </small>
+									</span>
+									<span class="bold"><?php echo $result['projectName'];?></span>
+								</td>
+								<td width="30%">
+									
+								</td>
+								<td width="40%">
+									<span class="lbTitle">
+										សាខាទទួល : 
+										<small> Receiving Branch : </small>
+									</span>
+									<span class="bold " > <?php echo $result['ReceiveBranch'];?></span>
+								</td>
+								
+							</tr>
+
+							<tr>
+								<td width="40%">
+									<span class="lbTitle">
+										លេខវេរចេញ : 
+										<small>Transfer N <suP>o</suP> : </small>
+									</span>
+									<span class="bold" style="color:red;"> <?php echo $result['transferNo'];?></span>
+								</td>
+								<td width="30%">
+									
+								</td>
+								<td width="40%">
+									<span class="lbTitle">
+										អ្នកទទួល : 
+										<small> Receiver : </small>
+									</span>
+									<span class="bold" ><?php echo $result['ReceiverId'];?></span>
+								</td>
+								
+							</tr>
+
+							<tr>
+								<td width="40%">
+									<span class="lbTitle">
+								     ថ្ងៃផ្ទេរចេញ : 
+										<small>Transfer Date : </small>
+									</span>
+									<span class="bold"><?php echo $result['TransferDate'];?></span>
+								</td>
+								<td width="30%">
+									
+								</td>
+								<td width="40%">
+									<span class="lbTitle">
+										ប្រើសម្រាប់ : 
+										<small> Transfer for : </small>
+									</span>
+									<span class="bold " ><?php echo $result['userFor'];?></span>
+								</td>
+								
+							</tr>
+
+							<tr>
+								<td width="40%">
+								<span class="lbTitle">
+										អ្នកផ្ទេរចេញ : 
+										<small> Transfer : </small>
+									</span>
+									<span class="bold" ><?php echo $result['driverName'];?></span>
+									
+								</td>
+								<td width="30%">
+									
+								</td>
+								<td width="40%">
+									<span class="lbTitle">
+								     អ្នកដឹក : 
+										<small>Deliver: </small>
+									</span>
+									<span class="bold"><?php echo $result['transferer'];?></span>
+									
+								</td>
+								
+							</tr>
+							
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+						<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
+							<thead>
+								<tr class="style headRow" align="center" >
+									<td scope="col" class="center" style="width:50px;">
+										<span>ល.រ</span>
+										<small>N<sup>o</sup></small>
+									</td>
+									<td scope="col" class="center" style="width:200px;">
+										<span>ឈ្មោះទំនិញ</span>
+										<small>Product</small>
+									</td>
+									
+									<td scope="col" class="center" style="width:200px;">
+										<span>បរិមាណផ្ទេរចេញ</span>
+										<small>Transfer Qty</small>
+									</td>
+									<td scope="col" class="center" style="width:200px;">
+										<span>បរិមាណបានទទួល</span>
+										<small>Received Qty</small>
+									</td>
+									<td scope="col" class="center" style="width:200px;">
+										<span>បរិមាណនៅសល់</span>
+										<small>Remain Qty</small>
+									</td>
+									<td scope="col" class="center"  style="width:200px;">
+										<span>សម្គាល់</span>
+										<small>note</small>
+									</td>
+								</tr>
+								
+							</thead>
+							<?php 
+							 	$i=0;
+				                if(!empty($this->rowdetail)) foreach ($this->rowdetail as $index => $rs){ 
+				                $i++;
+								$totalReceive = "-";
+								$totalReceive = empty($rs['totalReceiveQty'])?$totalReceive:$rs['totalReceiveQty'].' '.$rs['MeasureLabel'];
+								$remainQty = $rs['qtyAppAfter'];
+								$qtyTransfer = $rs['qtyRequest'];
+								
+								
+								$completed="";
+								if( ($rs["isCompleted"]>0) OR ($remainQty==0) ){
+									$completed = "greenClass";
+									$remainQty="&#10003;";
+									
+								}
+							 ?>
+								<tr class="style" style=" white-space:nowrap;">
+					               	<td data-label="ល.រ/N.o" class="centerText"><?php echo $index+1;?></td>
+									<td data-label="ឈ្មោះទំនិញ/Product Name" class="centerText"><?php echo $rs['proName'].' '.$rs['proCode'];?></td>
+									<td data-label="បរិមាណផ្ទេរចេញ/Transfer Qty" class="centerText"><?php echo $qtyTransfer.' '.$rs['MeasureLabel'];?></td>
+									<td data-label="បរិមាណបានទទួល/Received Qty" class="centerText bold"><?php echo $totalReceive;?></td>
+									<td data-label="បរិមាណនៅសល់/Remain Qty" class="centerText bold <?php echo $completed;?>"><?php echo $remainQty;?></td>
+									<td data-label="សម្គាល់/Note" style="font-size: 10px;" class="centerText"><?php echo $rs['note'];?></td>
+								</tr>
+							<?php 
+								}
+								for($num=$i;$num<=9;$num++){
+							?>
+								<tr class="style" style=" white-space:nowrap;">
+					               	<td data-label="ល.រ/N.o"  class="centerText">&nbsp;<?php echo $num+1;?></td>
+									<td data-label="ឈ្មោះទំនិញ/Product Name"></td>
+									<td data-label="បរិមាណផ្ទេរចេញ/Transfer Qty"></td>
+									<td data-label="បរិមាណបានទទួល/Received Qty"></td>
+									<td data-label="បរិមាណនៅសល់/Remain Qty"></td>
+									<td ddata-label="សម្គាល់/Note" ></td>
+								</tr>
+							<?php }?>
+						
+						
+						</table>
+						
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+					<br />
+						
+						
+						<div class="clearfix" style="clear: both !important;"></div>
+						<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:10px;" >
+							<tr>
+								<td style="width:40%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;">អ្នកផ្ទេរទំនិញចេញ/Transfer Name</span>
+								</td>
+								<td style="width:20%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;">អ្នកដឹក/Deliver Name</span>
+								</td>
+								<td style="width:40%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;">អ្នកទទួល / Receiver</span>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" style="height:80px;" >
+									&nbsp;
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align:center;">
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["driverName"];?></span>
+								</td>
+								<td style="text-align:center;">
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["transferer"];?></span>
+									
+								</td>
+								
+								<td style="text-align:center;">
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["ReceiverId"];?></span>
+								</td>
+							</tr>
+						</table>
+						<div class="clearfix" style="clear: both !important;"></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getBranchInfo();
+	});
+});
+		
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->row['fromProjectID'])?0:$this->row['fromProjectID'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:65px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			document.getElementById('projectName').innerHTML = 'គម្រោង៖ '+arr.project_name;
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

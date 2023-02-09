@@ -1,0 +1,647 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ADD_PROPERTY'));
+?>	
+<?php  $frm = $this->frm_client;?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dijit.Dialog");
+	dojo.require("dijit.form.Textarea");
+</script>
+<div class="card">
+	<div class="card-content collapse show">
+		<form id='add_client'  enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					loadingBlock();
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-map" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_PROPERTY');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-4">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-money" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PRICE_INFO");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-4 col-sm-4 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?><span class="required">*</span>  :
+									   </label>
+									   <div class="col-md-8 col-sm-8 col-xs-12">
+											<input id="branch_id" />
+									   </div>
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label bold col-md-4 col-sm-4 col-xs-12" >
+											<?php echo $tr->translate("PROPERTY_CODE");?><span class="required">*</span>
+											 :
+									   <span id="message" style="color: red; display: block;"></span>
+									   </label>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="land_address_prefix" name="land_address_prefix" placeholder="<?php echo $tr->translate("PREFIX_CODE");?>" value="" type="text">
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<?php echo $frm->getElement('land_address');?>
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.NumberTextBox" required="1" class="fullside" id="to_land_address" name="to_land_address" placeholder="<?php echo $tr->translate("TO");?>" value="" type="text">
+									   </div>
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="postfix_land_address" name="postfix_land_address" placeholder="<?php echo $tr->translate("POST_CODE");?>" value="" type="text">
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-4 col-sm-4 col-xs-12" ><?php echo $tr->translate("STREET");?>  :
+									   </label>
+									   <div class="col-md-8 col-sm-8 col-xs-12">
+											<?php echo $frm->getElement('street');?>
+											<?php echo $frm->getElement('streetCode');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-4 col-sm-4 col-xs-12" ><?php echo $tr->translate("PROPERTY_TYPE");?>  :
+									   </label>
+									   <div class="col-md-8 col-sm-8 col-xs-12">
+											<input id="property_type" />
+									   </div>
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label bold col-md-4 col-sm-4 col-xs-12" ><?php echo $tr->translate("TYPE_STORE");?> :
+									   </label>
+										<div class="col-md-8 col-sm-8 col-xs-12">
+											<?php echo $frm->getElement('type_tob');?>
+									   </div>
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label bold col-md-4 col-sm-4 col-xs-12" ><?php echo $tr->translate("PRICE");?><span class="required">*</span>  :
+									   </label>
+									   <div class="col-md-8 col-sm-8 col-xs-12">
+											<?php echo $frm->getElement('house_price');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+			    </div>  
+				
+			    <div class="col-md-4 col-sm-4 col-xs-4">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-map" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("INFO_OF_LAND");?></p>
+										</div> 
+									</div>
+									 <div class="form-group">
+									   <label class="control-label bold col-md-6 col-sm-6 col-xs-12" ><?php echo $tr->translate("WIDTH");?> :
+									   </label>
+									   <div class="col-md-6 col-sm-6 col-xs-12">
+											<?php echo $frm->getElement('width');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-6 col-sm-6 col-xs-12" ><?php echo $tr->translate("HEIGHT");?> :
+									   </label>
+									   <div class="col-md-6 col-sm-6 col-xs-12">
+											<?php echo $frm->getElement('height');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-6 col-sm-6 col-xs-12" ><?php echo $tr->translate("SIZE");?> :
+									   </label>
+									   <div class="col-md-6 col-sm-6 col-xs-12">
+											<?php echo $frm->getElement('size');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+										   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+											<?php echo $tr->translate("SOUTH");?> :
+										   </div>
+										   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+											<?php echo $frm->getElement('option_south');?>
+										   </div>
+									   </div>
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="south_prefix" placeholder="<?php echo $tr->translate("PREFIX_CODE");?>" name="south_prefix" value="" type="text">
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<?php echo $frm->getElement('south');?>
+									   </div>
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="postfix_south" name="postfix_south" value="" placeholder="<?php echo $tr->translate("POST_FIX");?>" type="text">
+									   </div>
+									</div>
+									<div class="form-group">
+										<div class="control-label col-md-6 col-sm-6 col-xs-12" >
+										   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+											<?php echo $tr->translate("NORTH");?> :
+										   </div>
+										   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+											<?php echo $frm->getElement('option_north');?>
+										   </div>
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="north_prefix" placeholder="<?php echo $tr->translate("PREFIX_CODE");?>" name="north_prefix" value="" type="text">
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<?php echo $frm->getElement('north');?>
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="postfix_north" name="postfix_north" placeholder="<?php echo $tr->translate("POST_FIX");?>" value="" type="text">
+									   </div>
+									 </div>
+									<div class="form-group">
+									   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+										   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+											<?php echo $tr->translate("WEST");?> :
+										   </div>
+										   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+											<?php echo $frm->getElement('option_west');?>
+										   </div>
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="west_prefix" placeholder="<?php echo $tr->translate("PREFIX_CODE");?>" name="west_prefix" value="" type="text">
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<?php echo $frm->getElement('west');?>
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="postfix_west" name="postfix_west" value="" placeholder="<?php echo $tr->translate("POST_FIX");?>" type="text">
+									   </div>
+									</div>
+									<div class="form-group">
+									   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+										   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+											<?php echo $tr->translate("EAST");?> :
+										   </div>
+										   <div class="control-label col-md-6 col-sm-6 col-xs-12" >
+											<?php echo $frm->getElement('option_east');?>
+										   </div>
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="east_prefix" name="east_prefix" placeholder="<?php echo $tr->translate("PREFIX_CODE");?>" value="" type="text">
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<?php echo $frm->getElement('east');?>
+									   </div>
+									   <div class="col-md-2 col-sm-2 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="postfix_east" name="postfix_east" value="" placeholder="<?php echo $tr->translate("POST_FIX");?>" type="text">
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-6 col-sm-6 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+									   </label>
+									   <div class="col-md-6 col-sm-6 col-xs-12">
+											<?php echo $frm->getElement('desc');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-md-4 col-sm-4 col-xs-4">
+				 <?php $is_show =$this->data['showhouseinfo']; 
+					if($is_show==1){?>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-home" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("HOUSE_INFO");?></p>
+										</div> 
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("WIDTH");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('width_land');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("HEIGHT");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('height_land');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SIZE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('full_size');?>
+									   </div>
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("FLOOR");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('floor');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BEDROOM");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('bedroom');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LIVING");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('living');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DINNER_ROOM");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('dinnerroom');?>
+									   </div>
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PARKING_SPACE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('parkingspace');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BUIDING_YEAR");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('buidingyear');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	                <?php }?>
+			    </div>
+	    	</div>
+			
+	    	<div class="clearfix"></div>
+			    <div class="card-box">
+               		<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+		    			<input type="reset" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"  /> 
+						<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" />
+					   <input type="button"  class="button-class button-primary" iconClass="glyphicon glyphicon-search" onclick="Preview();" value="preview" name="preview" label="<?php echo $tr->translate('PREVIEW');?>" dojoType="dijit.form.Button" /> 
+	    		</div>
+	    	</div>
+		</form>
+	</div>
+</div>
+<?php echo $this->frmPopupPropertyType;?>
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("STREET")?>'"  id="frm_street" >
+		<form id="form_propertytype" >
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<?php echo $tr->translate("STREET_CODE")?>
+					</td>
+					<td>
+						<input dojoType="dijit.form.TextBox" placeholder="<?php echo $tr->translate("STREET_CODE")?>" class="fullside" id="streetNewCode" name="streetNewCode" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<?php echo $tr->translate("STREET_NAME")?>
+					</td>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" placeholder="<?php echo $tr->translate("STREET_NAME")?>" required="true" class="fullside" id="newStreet" name="newStreet" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewStreet();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<div class="dijitHidden">
+	<style>
+	.print tr td{
+		padding:5px 2px; 
+	}
+	.tablesorter th{text-align: center !important;}
+	</style>
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'Properties List'" id="lbl_properties" style="width: 1020px !important;">
+		<div class="print" style="text-align: center;">
+			<div id="t_amountmoneytype" name="t_amountmoneytype">
+			</div>
+		</div>
+	</div>
+</div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("TYPE_STORE")?>'"  id="frm_cheque" >
+		<form id="form_cheque"​ dojoType="dijit.form.Form" >
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="addchequename" name="addchequename" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewCheque();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+require(["dojo/ready"], function(ready){
+	new dijit.form.FilteringSelect({
+		name: "type_tob",
+		id: "type_tob",
+		autoComplete: false,
+		required: false,
+		queryExpr: "*${0}*",     
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			popupIssuer();
+	    }
+	}, "type_tob");
+});
+function popupIssuer(){
+	cheque_issuer = dijit.byId('type_tob').get('value');
+	if(cheque_issuer==-1){
+		dijit.byId('save_cheque').set('disabled',false);
+		dijit.byId('frm_cheque').show();
+	}
+}
+var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->alltobtype));?> );
+function addNewCheque(){
+	if(dijit.byId('form_cheque').validate()){
+		var Itemmake = {					
+			id: dijit.byId('addchequename').get('value'),
+		    name: dijit.byId('addchequename').get('value')
+		};		
+		addDataToSelectbox(dijit.byId('type_tob'),chequeStore , Itemmake, dijit.byId('addchequename').get('value'));
+		dijit.byId('form_cheque').reset();
+		dijit.byId('frm_cheque').hide();
+		dijit.byId('save_cheque').set('disabled',true);
+	}
+}
+function Preview(){
+	temp='';	
+	  fund_title=0;thead='';
+	  temp='<table class="collape tablesorter" style="font-size:13px; width:1000px !important; " id="table">'
+		  temp+='<tr style="background:#ccc;text-align:center;"><th><?php echo $tr->translate("NUM");?></th>';
+		  temp+='<th><?php echo $tr->translate("លេខឡូតិ៍");?></th>';
+		  temp+='<th><?php echo $tr->translate("ផ្លូវ");?></th>';
+		  temp+='<th><?php echo $tr->translate("ប្រភេទ");?></th>';
+		  temp+='<th><?php echo $tr->translate("តម្លៃ");?></th>';
+		  temp+='<th><?php echo $tr->translate("ទទឹង");?></th>';
+		  temp+='<th><?php echo $tr->translate("បណ្តោយ");?></th>';
+		  temp+='<th><?php echo $tr->translate("ទំហំ");?></th>';
+		  temp+='<th><?php echo $tr->translate("ត្បូង");?></th>';
+		  temp+='<th><?php echo $tr->translate("ជើង");?></th>';
+		  temp+='<th><?php echo $tr->translate("លិច");?></th>';
+		  temp+='<th><?php echo $tr->translate("កើត");?></th></tr>';
+		  increase=0;
+		  width = dijit.byId('width').get('value');
+		  	if(isNaN(width)){width='';}
+		  height = dijit.byId('height').get('value');
+		  	if(isNaN(height)){height='';}
+		  size = dijit.byId('size').get('value');
+		  	if(isNaN(size)){size='';}
+		  price = dijit.byId('house_price').get('value');
+		  if(isNaN(price)){price='';}
+
+		  option_south = dijit.byId('option_south').get('value');
+		  option_north = dijit.byId('option_north').get('value');
+		  option_west = dijit.byId('option_west').get('value');
+		  option_east = dijit.byId('option_east').get('value');
+		  //if(optionCount==1){
+		  record_start = 0;
+			  for( i=dijit.byId('land_address').get("value");i<=dijit.byId('to_land_address').get("value");i++){
+					var southIncrease="";
+					var nothIncrease="";
+					var westhIncrease="";
+					var eastIncrease="";
+					if(dijit.byId('south').get('value')!=""){
+						southIncrease = (parseInt(dijit.byId('south').get('value'))+(parseInt(option_south)*record_start));
+					}
+					if(dijit.byId('north').get('value')!=""){
+						nothIncrease = (parseInt(dijit.byId('north').get('value'))+parseInt(option_north*record_start));
+					}
+					if(dijit.byId('west').get('value')!=""){
+						westhIncrease = (parseInt(dijit.byId('west').get('value'))+parseInt(option_west*record_start));
+					}
+					if(dijit.byId('east').get('value')!=""){
+						eastIncrease = (parseInt(dijit.byId('east').get('value'))+parseInt(option_east*record_start));
+					}
+					record_start++;
+					var south = dijit.byId('south_prefix').get("value")+southIncrease+dijit.byId('postfix_south').get('value');
+					var noth =dijit.byId('north_prefix').get("value")+nothIncrease+dijit.byId('postfix_north').get('value');
+					var west = dijit.byId('west_prefix').get("value")+westhIncrease+dijit.byId('postfix_west').get('value');
+					var east = dijit.byId('east_prefix').get("value")+eastIncrease+dijit.byId('postfix_east').get('value');
+
+					temp+='<tr><td align="center">'+(increase+1)+'</td>';
+						 temp+='<td align="center">'+ dijit.byId('land_address_prefix').get("value")+i+dijit.byId('postfix_land_address').get('value')+'</td>';
+						 temp+='<td align="center">'+ dijit.byId('street').attr('displayedValue')+'</td>';
+						 temp+='<td align="center">'+ dijit.byId('property_type').attr('displayedValue')+'</td>';
+						 temp+='<td align="center">'+price+'</td>';
+						 temp+='<td align="center">'+width+'</td>';
+						 temp+='<td align="center">'+height+'</td>';
+						 temp+='<td align="center">'+size+'</td>';
+						 temp+='<td align="center">'+south+'</td>';
+						 temp+='<td align="center">'+noth+'</td>';
+						 temp+='<td align="center">'+west+'</td>';
+						 temp+='<td align="center">'+east+'</td>';
+						 increase++;
+						 temp+='<tr>';
+				}
+	
+	temp+='</table>';
+	dojo.byId('t_amountmoneytype').innerHTML = temp;
+	dijit.byId("lbl_properties").show();
+}
+function showStreet(){
+	street = dijit.byId('street').get('value');
+	if(street==''){
+		alert("<?php echo $tr->translate("PLEASE_SELECT_STREET")?>");
+		dijit.byId('street').focus();
+		return false;
+	}else if(street==-1){
+		dijit.byId('frm_street').show();
+	}
+}
+var StreetStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->street));?> );
+function addNewStreet(){
+	var Itemmake = {					
+			id: dijit.byId('newStreet').get('value'),
+		    name: dijit.byId('newStreet').get('value')
+	};		
+	addDataToSelectbox(dijit.byId('street'), StreetStore, Itemmake, dijit.byId('newStreet').get('value'));	
+	dijit.byId('newStreet').attr('value',dijit.byId('newStreet').get('value'));
+	dijit.byId('streetCode').attr('value',dijit.byId('streetNewCode').get('value'));
+	
+	dijit.byId('frm_street').reset();
+	dijit.byId('frm_street').hide();
+}
+
+var propertyType_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->pro_type));?> );
+var branch_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->branch_opt));?> );
+
+dojo.ready(function(){
+	try{
+		new dijit.form.FilteringSelect({
+			store: propertyType_store,
+			autoComplete: true,
+			required: false,		           
+			name: "property_type",
+			id: "property_type",
+			searchAttr: "name",
+			class: 'fullside',
+				onChange: function() {
+					showPopupForm();
+				}  
+			}, "property_type");
+
+		new dijit.form.FilteringSelect({
+			store: branch_store,
+			autoComplete: true,
+			required: true,		           
+			name: "branch_id",
+			id: "branch_id",
+			searchAttr: "name",
+			class: 'fullside',
+				onChange: function() {
+					branch_id = dijit.byId('branch_id').get('value');
+					if(branch_id==-1){
+						
+					}else{
+						getPropertyNo();
+					}
+				}  
+			}, "branch_id");
+	}catch(e){
+	}
+});
+function calCulateSize(){
+width = dijit.byId("width").get('value');
+height = dijit.byId("height").get('value');
+totalsize = width*height;
+dijit.byId("size").attr('value',totalsize);
+}
+function calCulateFullSize(){
+	width = dijit.byId("width_land").get('value');
+	height = dijit.byId("height_land").get('value');
+	totalsize = width*height;
+	dijit.byId("full_size").attr('value',totalsize);
+}
+function showPopupForm(){
+	property_type = dijit.byId('property_type').get('value');
+	if(property_type==''){
+		alert('Please Select Property Type');
+		dijit.byId('property_type').focus();
+		return false;
+	}else if(property_type==-1){
+		dijit.byId('frm_propertytype').show();
+	}
+}
+
+url_property = '<?php echo $this->url(array('module'=>'project','controller'=>'propertiestype','action'=>'add-propertytype'));?>';
+function addNewPropertytype(){
+	if(dijit.byId('frm_propertytype').validate()) {
+		dojo.xhrPost({
+			url:url_property,	
+			form:dojo.byId('form_propertytype'),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = {					
+						id: data,
+					    name: dijit.byId('type_nameen').get('value')
+				};		
+				addDataToSelectbox(dijit.byId('property_type'), propertyType_store, Itemmake, data);	
+				dijit.byId('property_type').attr('value',data);
+				dijit.byId('frm_propertytype').reset();
+				dijit.byId('frm_propertytype').hide();
+			},
+			error: function(err) {
+			}
+		});
+	}
+}
+function getPropertyNo(){
+	
+}
+function CalculatePrice(){
+}
+
+url_CheckTitle = '<?php echo $this->url(array('module'=>'project','controller'=>'land','action'=>'check-title'));?>';
+function checkTitle(){
+	title = dijit.byId('land_address').get('value');
+	branch_id = dijit.byId('branch_id').get('value');
+	street = dijit.byId('street').get('value');
+	if(title=='' || street==''){ return false;}
+	dojo.xhrPost({
+		url:url_CheckTitle,	
+		content:{ 
+			'branch_id': branch_id , 'land_address': title,'street': street
+		},
+		handleAs:"json",
+		load: function(data) {	
+			if(data !== false ){
+		   		document.getElementById('message').innerHTML ='លេខផ្ទះ/ឡូតិ៍នេះមានរួចរាល់ហើយ';
+		   		dijit.byId('land_address').focus();
+			}else{
+				document.getElementById('message').innerHTML ='';
+			}
+		},
+		error: function(err) {
+		}
+	});
+}
+</script>

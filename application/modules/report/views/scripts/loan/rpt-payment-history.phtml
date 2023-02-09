@@ -1,0 +1,578 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_search;
+$opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង់រំលោះប្រាក់ដើម",4=>"បង់ផ្តាច់");
+
+$dbGB = new Application_Model_DbTable_DbGlobal();
+$logo = $this->baseUrl()."/images/logo.jpg";
+$branch_title = $tr->translate("BRAND_TITLE");
+if ($this->search['branch_id'] >0 ){
+	$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+	}
+	//$branch_title = $branch['project_name'];
+}
+$headerReportType = REPORT_LETER_HEAD;
+$classHideHeight="110px";
+if($headerReportType==2){
+	$classHideHeight="125px";
+}
+?>
+<script>
+     dojo.require("dijit.form.DateTextBox");
+</script>
+<title><?php echo $tr->translate("REPORT_LOAN_PAYMENT");?></title>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('REPORT_LOAN_PAYMENT');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form method="post">
+		<div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("adv_search");?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('branch_id');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('client_name');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('streetlist');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('option_pay');?>
+				</div>
+				
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('start_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('end_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+				</div>
+			</div>
+		</div>
+	</form>
+	<div style="min-height:22cm; margin:0 auto;">
+			<div id="divPrint">
+			<style>
+			.style{
+				line-height: 20px;font-size: 11px !important;
+				font-family: 'Times New Roman','Khmer OS Battambang';
+			}
+			.stylehover:hover{background: #ccc;}
+			table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+			th{padding: 5px;}
+			table.content-data{
+				border-collapse:collapse;
+				border:1px solid #000; 
+				font-size:13px;
+				font-family: 'Times New Roman','Khmer OS Battambang';
+			}
+			table.content-data thead tr.style {
+			   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+			}
+			tr.style.saleback{
+				 background: #c1d0f3;
+			}
+			.payment-info{
+			    background: #8dabf3;
+			}
+			td.receiptNum{
+			    color: red;
+				font-weight: 600;
+				text-align:center;
+			}
+			table tr td{
+				padding:0 2px;
+			}
+			
+			.hide{visibility: hidden;}
+			@media print {
+				div.divFooter {
+					position: absolute;
+					top: 0;
+					width: 100%;
+					height: 100px;
+					bottom:0px;
+					margin:0;
+				}
+				.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+			}
+			
+			</style>
+			<?php $client_id = null; $sale_id = null;?>
+			<?php 
+				$principle_r = 0;$interst_r = 0;$penalize_r = 0;$service_charge_r = 0;$balane_r = 0;
+                $principle_b = 0;$interst_b = 0;$penalize_b = 0;$service_charge_b = 0;$balane_b = 0;
+                $principle_d = 0; $interst_d = 0; $penalize_d= 0; $service_charge_d = 0; $extra_payment=0;
+                $i=1;
+			?>
+			<table width="100%">
+				<tr>
+			    	<td align="center">
+						<div class="divFooter">
+							<?php echo $this->headerReport;?>
+						</div>
+			        </td>
+			    </tr>
+				<tr>
+			    	<td class="hide" >
+							
+			        </td>
+			    </tr>
+			    <tr><td  id="exportExcel" class="mymy">
+			    		<table class="content-data" width="100%" border="1"  cellspacing="0">
+			            	<?php $totalpaid =0; 
+			            	$totalprincsa=0; 
+			            	$clientPrincsa=0;
+			            	
+			            	$totalInterestsa=0;
+			            	$clientInterest=0;
+			            	
+			            	$totalPenalizesa=0;
+			            	$clientPenalize=0;
+			            	
+			            	$totalExtrasa=0;
+			            	$clientExtra=0;
+			            	
+			            	$totalsa=0;
+			            	$clientTotal=0;
+			            	$counsaleCus=0;
+			            	
+			            	if(!empty($this->loantotalcollect_list)) {
+				              	foreach ($this->loantotalcollect_list as $index => $rs){?>
+				              			<?php if ($client_id!=$rs["client_id"]) { $counsaleCus++;?>
+				              			<?php if ($index>0){?>
+				              			
+				              			<?php if ($counsaleCus>1){?>
+				              			 <tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+		               						<td colspan="5" rowspan="2"  style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;"><?php echo $tr->translate("TOTAL");?></td>
+		               						<td align="right"><strong><?php echo number_format($totalprincsa,2);?></strong></td>
+		               						<td align="right"><strong><?php echo number_format($totalInterestsa,2);?></strong></td>
+		               						<td align="right"><strong><?php echo number_format($totalPenalizesa,2);?></strong></td>
+		               						<td align="right"><strong><?php echo number_format($totalExtrasa,2);?></strong></td>
+		               						<td align="right"><strong><?php echo number_format($totalsa,2);?></strong></td>
+			               				</tr>
+			               				<tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;background: #c1d0f3;" width="100%">
+		               						<td align="right"><strong><?php echo number_format($clientPrincsa,2);?></strong></td>
+		               						<td align="right" ><strong><?php echo number_format($clientInterest,2);?></strong></td>
+		               						<td align="right"><strong><?php echo number_format($clientPenalize,2);?></strong></td>
+		               						<td align="right"><strong><?php echo number_format($clientExtra,2);?></strong></td>
+		               						<td align="right"><strong><?php echo number_format($clientTotal,2);?></strong></td>
+		               					</tr>
+		               					<?php }else{?>
+		               					<tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+		               						<td colspan="5" style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;"><?php echo $tr->translate("TOTAL");?></td>
+		               						<td align="right" style="background: #c1d0f3;"><strong><?php echo number_format($clientPrincsa,2);?></strong></td>
+		               						<td align="right" style="background: #c1d0f3;"><strong><?php echo number_format($clientInterest,2);?></strong></td>
+		               						<td align="right" style="background: #c1d0f3;"><strong><?php echo number_format($clientPenalize,2);?></strong></td>
+		               						<td align="right" style="background: #c1d0f3;"><strong><?php echo number_format($clientExtra,2);?></strong></td>
+		               						<td align="right" style="background: #c1d0f3;"><strong><?php echo number_format($clientTotal,2);?></strong></td>
+		               					</tr>
+		               					<?php }?>
+		               					 <tr>
+						                	<td colspan="16" style="border-left:1px solid #fff;border-right:1px solid #fff;"></td>
+						                </tr>
+				              			<?php }?>
+				              				<tr style="background:#c1d0f3"><td colspan="18" class="style">
+				              			<?php 
+				              				 echo $tr->translate("CUSTOMER_NAME").':'.$rs["name_kh"].',';
+				              				 echo $tr->translate("SEX").':';
+				              					if (!empty($rs['sex']) AND $rs['sex']==1){
+				              					echo "M";
+				              				}
+				              				else {
+				              					echo "F";
+				              				}
+				              				
+				              				$totalpaid = 0;
+				              				$totalsa=0;
+				              				$totalprincsa=0;
+				              				$clientPrincsa=0;
+				              				$clientTotal=0;
+				              				
+				              				$totalInterestsa=0;
+				              				$clientInterest=0;
+				              				
+				              				$totalPenalizesa=0;
+				              				$clientPenalize=0;
+				              				
+				              				$totalExtrasa=0;
+				              				$clientExtra=0;
+				              				
+				              				$counsaleCus=0;
+				              			?>
+					              			</td>
+					              	</tr>
+				              <thead>
+
+							  <tr class="style saleback" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
+				                    <td scope="col"><?php echo $tr->translate("NUM");?></td>
+				                    <td scope="col"><?php echo $tr->translate("BRANCH_NAME");?></td>
+				                    <td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+				                    <td scope="col"><?php echo $tr->translate("STREET");?></td>
+				                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>	
+				                    <td scope="col"><?php echo $tr->translate("PAID_PRINCIPAL");?></td>                   
+				                    <td scope="col"><?php echo $tr->translate("INTEREST");?></td>
+				                    <td scope="col"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+				                    <td scope="col"><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
+				                    <td scope="col"><?php echo $tr->translate("PAY_DATE");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("RECIEPT_NO");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("PAYMENTED");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("INPUT_DATE");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("BY_USER");?></td>
+				                </tr>
+
+							  </thead>
+				                <?php }?>
+				                <?php if ($client_id==$rs["client_id"]) {?>
+				                	<?php if($sale_id!=$rs["sale_id"]){ $counsaleCus++;?>
+			              			<tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+	               						<td colspan="5"  style="border-left:1px solid #fff;  text-align: right;"><?php echo $tr->translate("TOTAL");?></td>
+	               						<td align="right"><strong><?php echo number_format($totalprincsa,2);?></strong></td>
+	               						<td align="right"><strong><?php echo number_format($totalInterestsa,2);?></strong></td>
+	               						<td align="right"><strong><?php echo number_format($totalPenalizesa,2);?></strong></td>
+	               						<td align="right"><strong><?php echo number_format($totalExtrasa,2);?></strong></td>
+	               						<td align="right"><strong><?php echo number_format($totalsa,2);?></strong></td>
+		               				</tr>
+			              			<?php 
+			              			$totalsa=0; $totalprincsa=0; $totalInterestsa=0;
+			              			$totalPenalizesa=0;	$totalExtrasa=0;
+				              			 }?>
+			              		<?php }?>
+			               <?php 
+			              
+				               if($sale_id!=$rs["sale_id"]){
+				               	$totalpaid = 0;
+				               }
+				               $sale_id=$rs["sale_id"];
+			               
+								$principle_d = $principle_d+$rs["total_principal_permonthpaid"];
+								$interst_d = $interst_d+$rs["total_interest_permonthpaid"];
+								$penalize_d = $penalize_d+$rs["penalize_amountpaid"];
+								$service_charge_d = $service_charge_d+$rs["service_chargepaid"];
+								$extra_payment = $extra_payment+$rs["extra_payment"];
+								
+								$totalpaid = $totalpaid + $rs['amount_payment'];
+								$totalsa = $totalsa+ $rs["total_principal_permonthpaid"]+$rs["total_interest_permonthpaid"]+$rs["penalize_amountpaid"]+$rs["service_chargepaid"]+$rs["extra_payment"];
+								$clientTotal = $clientTotal+ $rs["total_principal_permonthpaid"]+$rs["total_interest_permonthpaid"]+$rs["penalize_amountpaid"]+$rs["service_chargepaid"]+$rs["extra_payment"];
+							
+								$totalprincsa=$totalprincsa+$rs["total_principal_permonthpaid"];
+								$clientPrincsa=$clientPrincsa+$rs["total_principal_permonthpaid"];
+								
+								$totalInterestsa=$totalInterestsa+$rs["total_interest_permonthpaid"];
+								$clientInterest=$clientInterest+$rs["total_interest_permonthpaid"];
+								
+								
+								$totalPenalizesa=$totalPenalizesa+$rs["penalize_amountpaid"];
+								$clientPenalize=$clientPenalize+$rs["penalize_amountpaid"];
+								
+								$totalExtrasa=$totalExtrasa+$rs["extra_payment"];
+								$clientExtra=$clientExtra+$rs["extra_payment"];
+							?>
+			                <tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+			               		<td data-label="<?php echo $tr->translate("NUM");?>" style="text-align: center;"><?php echo $i++; ?></td>
+			               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
+			               		<td data-label="<?php echo $tr->translate("NUM");?>"><?php echo $rs["land_address"];?></td>
+			               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><?php echo $rs["street"];?></td>
+			               		<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>"><?php echo number_format($rs["sold_price"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" align="right"><?php echo number_format($rs["total_principal_permonth"],2);?></td>               		
+			               		<td data-label="<?php echo $tr->translate("INTEREST");?>" align="right"><?php echo number_format($rs["total_interest_permonthpaid"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" align="right"><?php echo number_format($rs["penalize_amount"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>" align="right"><?php echo number_format($rs["extra_payment"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("PAY_DATE");?>"><?php echo date('d-m-Y',strtotime($rs["date_payment"]));?></td>
+			               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" class="receiptNum"><?php echo $rs["receipt_no"];?></td>
+			               		<td data-label="<?php echo $tr->translate("PAYMENTED");?>" align="right"><?php echo number_format($rs["amount_payment"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>"><?php echo date("d-m-Y",strtotime($rs['date_pay']));?></td>
+			               		<td data-label="<?php echo $tr->translate("PAYMENT_OPTION");?>" style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" ><?php echo $rs["paymentoption"]; //echo @$opt[$rs["payment_option"]];?></td>
+			               		<td data-label="<?php echo $tr->translate("BY_USER");?>"><?php echo $rs["user_name"];?></td>
+			                </tr>
+			                <?php if ($client_id!=$rs["client_id"]) {
+			                	$client_id=$rs["client_id"];
+			                } ?>
+			                <?php }?>
+			                 <tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+               						<td colspan="5" rowspan="2"  style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;"><strong><?php echo $tr->translate("TOTAL");?></strong></td>
+               						<td align="right"><strong><?php echo number_format($totalprincsa,2);?></strong></td>
+               						<td align="right"><strong><?php echo number_format($totalInterestsa,2);?></strong></td>
+               						<td align="right"><strong><?php echo number_format($totalPenalizesa,2);?></strong></td>
+               						<td align="right"><strong><?php echo number_format($totalExtrasa,2);?></strong></td>
+               						<td align="right"><strong><?php echo number_format($totalsa,2);?></strong></td>
+               				</tr>
+               				<tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;background: #c1d0f3;" width="100%">
+               						<td align="right"><strong><?php echo number_format($clientPrincsa,2);?></strong></td>
+               						<td align="right" ><strong><?php echo number_format($clientInterest,2);?></strong></td>
+               						<td align="right"><strong><?php echo number_format($clientPenalize,2);?></strong></td>
+               						<td align="right"><strong><?php echo number_format($clientExtra,2);?></strong></td>
+               						<td align="right"><strong><?php echo number_format($clientTotal,2);?></strong></td>
+               					</tr>
+               			
+			                <tr>
+			                	<td colspan="16" style="border-left:1px solid #fff;border-right:1px solid #fff;"></td>
+			                </tr>
+			                  <tr bgcolor="#c1d0f3" class="style stylehover" style=" line-height: 20px; text-align: center;" >
+				                   <td style="padding:5px 0px;" colspan="3"><?php echo $tr->translate("TOTAL_PRINCIPLE");?></td>
+				                   <td style="padding:5px 0px;" colspan="3"><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+				                   <td style="padding:5px 0px;"colspan="3"><?php echo $tr->translate("TOTAL_PENELIZE");?></td>
+				                   <td style="padding:5px 0px;"colspan="3"><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
+				                   <td style="padding:5px 0px;" colspan="4"><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>
+				               </tr>
+			                   <tr class="style" style=" line-height: 24px; font-size:11px;font-family: 'Times New Roman','Khmer OS Battambang';">
+			                    <td colspan="3"><?php echo number_format($principle_d,2);?></td>
+			                    <td colspan="3"><?php echo number_format($interst_d,2);?></td>
+			                    <td colspan="3"><?php echo number_format($penalize_d,2);?></td>
+			                    <td colspan="3"><?php echo number_format($extra_payment,2);?></td>
+								<td colspan="4"><?php echo number_format($principle_d+$interst_d+$penalize_d+$service_charge_d+$extra_payment,2);?></td>
+			                </tr>
+			                <?php }?>
+			            </table>
+			              <br />
+			         	 <?php echo $this->footerReport;?>
+			    	</td>
+			    </tr>
+			</table>
+		</div>
+	</div>
+</div>
+<style>
+
+.select2-container, .select2-drop, .select2-search, .select2-search input {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+input#e15 {
+    display: none;
+}
+.select2-container {
+    margin: 0;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+.select2-container-multi .select2-choices {
+    min-height: 26px;
+}
+.select2-container-multi .select2-choices {
+    height: auto !important;
+    height: 1%;
+    margin: 0;
+    padding: 0 5px 0 0;
+    position: relative;
+    border: 1px solid #aaa;
+    cursor: text;
+    overflow: hidden;
+    background-color: #fff;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(1%, #eee), color-stop(15%, #fff));
+    background-image: -webkit-linear-gradient(top, #eee 1%, #fff 15%);
+    background-image: -moz-linear-gradient(top, #eee 1%, #fff 15%);
+    background-image: linear-gradient(to bottom, #eee 1%, #fff 15%);
+}
+.select2-container-multi .select2-choices .select2-search-choice {
+    padding: 3px 5px 3px 18px;
+    margin: 3px 0 3px 5px;
+    position: relative;
+    line-height: 13px;
+    color: #333;
+    cursor: default;
+    border: 1px solid #aaaaaa;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    background-clip: padding-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #e4e4e4;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#f4f4f4', GradientType=0);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eee));
+    background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+    background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+    background-image: linear-gradient(to bottom, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+}
+.select2-container-multi .select2-choices .select2-search-field {
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+}
+.select2-offscreen, .select2-offscreen:focus {
+    clip: rect(0 0 0 0) !important;
+    width: 1px !important;
+    height: 1px !important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    outline: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+}
+.select2-container-multi .select2-choices .select2-search-field input {
+    margin: 1px 0;
+    font-family: inherit;
+    font-size: 100%;
+    color: #666;
+    outline: 0;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background: transparent !important;
+}
+.select2-container-multi .select2-choices li {
+    float: left;
+    list-style: none;
+}
+.select2-container-multi .select2-search-choice-close {
+    left: 3px;
+}
+.select2-search-choice-close {
+    display: block;
+    width: 12px;
+    height: 13px;
+    position: absolute;
+    right: 3px;
+    top: 4px;
+    font-size: 1px;
+    outline: none;
+    background: url(<?php echo $this->baseUrl()."/admin/3.5.0/"?>select2.png) right top no-repeat;
+}
+	
+.select2-drop.select2-drop-above.select2-drop-active {
+    border-top: 1px solid #5897fb;
+}
+.select2-drop.select2-drop-above {
+    margin-top: 1px;
+    border-top: 1px solid #aaa;
+    border-bottom: 0;
+    border-radius: 4px 4px 0 0;
+    -webkit-box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
+    box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
+}
+.select2-display-none {
+    display: none;
+}
+.select2-drop-active {
+    border: 1px solid #5897fb;
+    border-top: none;
+}
+.select2-drop {
+    width: 100%;
+    margin-top: -1px;
+    position: absolute;
+    z-index: 9999;
+    top: 100%;
+    background: #fff;
+    color: #000;
+    border: 1px solid #aaa;
+    border-top: 0;
+    border-radius: 0 0 4px 4px;
+    -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
+    box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
+}
+.select2-results {
+    max-height: 200px;
+    padding: 0 0 0 4px;
+    margin: 4px 4px 4px 0;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.select2-results .select2-highlighted {
+    background: #3875d7;
+    color: #fff;
+}
+.select2-results li {
+    list-style: none;
+    display: list-item;
+    background-image: none;
+}
+    .select2-results .select2-result-label {
+    padding: 3px 7px 4px;
+    margin: 0;
+    cursor: pointer;
+    min-height: 1em;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.select2-results .select2-selected {
+    display: none;
+}
+</style>
+ <link href="<?php echo $this->baseUrl()."/admin/"?>/3.5.0/select2.min.css" /> 
+ <script src="<?php echo $this->baseUrl()."/admin/"?>/3.5.0/select2.min.js"></script>
+ 	 <?php 
+ $tags="";
+ if (!empty($this->street)) foreach ($this->street as $rs){
+ 	if (empty($tags)){
+ 		$tags = '"'.$rs['id'].'"';
+ 	}else{
+ 		if (!empty($rs['id'])){
+ 		$tags=$tags.',"'.$rs['id'].'"';
+ 		}
+ 	}
+ } 	
+?>
+ <script>
+
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		getBranchInfo();
+		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>';
+		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
+		 $("#e15").select2({tags:[<?php echo $tags;?>],placeholder: "<?php echo $tr->translate("CHOOSE_STREET");?>",allowClear: true});
+	});
+});
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

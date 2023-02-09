@@ -1,0 +1,82 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("TRANSFER_OUT"));
+	$frm = $this->frm_search;
+	
+	$transferLetter = $this->baseUrl()."/report/stockreport/rpt-transferdetail/id/";
+	$urlEdit = $this->baseUrl()."/stockinout/transferout/edit/id/";
+?>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-cubes" aria-hidden="true"></i>&nbsp;<i class="fa fa-random" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('TRANSFER_OUT');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+			   <div class="form-group">
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('adv_search');?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('branch_id');?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('status');?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('end_date');?>
+					</label>
+					<label class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('btn_search');?>
+					</label>
+	
+				</div>
+			</form>
+			<input type="hidden" id="id_selected" name="id_selected" />
+		</div>
+		<div class="card-box">
+			<?php echo $this->list;?>
+		</div>
+	</div>
+</div>
+<script>
+dojo.require('dijit.form.DateTextBox');
+
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			}else if(key=="transferLetter"){
+				url='<?php echo $transferLetter;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+			"transferLetter": {name: "<?php echo $tr->translate("RPT_TRANSFER_DERTAIL");?>", icon: "fa-file-text"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row+'?rightclick=true', '_blank');
+}
+</script>

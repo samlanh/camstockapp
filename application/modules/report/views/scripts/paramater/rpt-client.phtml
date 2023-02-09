@@ -1,0 +1,311 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_village;
+	
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_search;
+	$frms=$this->frm_client;
+
+	
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->result['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->result['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		//$branch_title = $branch['project_name'];
+	}
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
+	//echo $this->search['start_date'];
+?>
+<meta charset="utf-8">
+<title><?php echo $tr->translate("REPORT_CLIENT");?></title>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('REPORT_CLIENT');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form method="post">
+		<div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("adv_search");?>
+				</div>
+				
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frms->getElement('province');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<input id="district" >
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<input id="commune" >
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<input id="village" >
+				</div>
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('start_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('end_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('status');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("btn_search");?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+				</div>
+			</div>
+		</div>
+	</form>
+	<div id="divPrint">
+		<style>
+			.style{
+				line-height: 20px;font-size: 12px !important;
+				font-family: 'Times New Roman','Khmer OS Battambang';
+			}
+			table.content-data { page-break-inside:auto }
+			table.content-data tr{ page-break-inside:avoid; page-break-after:auto; }
+			#header {
+			  display: table-header-group;
+			  page-break-inside:avoid; page-break-after:auto;
+			}
+			.hover:hover{background: #ccc;}
+			th{padding: 3px 5px;}
+			.hide{visibility: hidden;}
+				@media print {
+				  div.divFooter {
+				    position: fixed;
+				    top: 0;
+				  	width: 100%;
+				  	height: 100px;
+				  	bottom:0px;
+					margin:0;
+				 }
+			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+			}
+			table.content-data{
+				border-collapse:collapse;
+				border:1px solid #000; 
+				font-size:13px;
+				font-family: 'Times New Roman','Khmer OS Battambang';
+				white-space: nowrap;
+				line-height: 22px;
+				width: 100%;
+			}
+			table.content-data thead tr.style {
+			   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+				background: #c1d0f3;
+			}
+			table.tb-footer{
+				border-collapse:collapse;
+				border:1px solid #000; 
+				font-family: 'Times New Roman','Khmer OS Battambang';
+				font-size:11px;
+			}
+			table.tb-footer tr{
+			 line-height: 14px;  padding:2px 0px; height: 25px;
+			}
+			table tr td{
+				padding:0 2px;
+			}
+			@media print{@page {size: landscape}}
+		</style>
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+		    	<div class="divFooter">
+					<?php echo $this->headerReport;?>
+		         </div>
+			</td>
+		</tr>
+	</table>
+		<table id="exportExcel" class="content-data"  width="100%" border="1"  bordercolor="black">   
+	    	<thead>
+	    		<tr class="hide" style="border:1px solid #fff;">
+		             <td colspan="12" style="border:1px solid #fff; border-bottom:1px solid #000;"></td>
+		        </tr>
+		    	<tr class="style" align="center" style="border: 1px solid #000;">
+		    		<td scope="col" colspan="9"><?php echo $tr->translate("CLIENT_INFO");?></td>
+		    		<td scope="col" colspan="6"><?php echo $tr->translate("RELEVANT_STAKEHOLDER");?></td>
+		    		<td scope="col" rowspan="2"><?php echo $tr->translate("DATE");?></td>
+		    	</tr>
+		    	<tr class="style" align="center">
+			       <td scope="col"><?php echo $tr->translate("NUM");?></td>
+			       <td scope="col"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+			       <td scope="col"><?php echo $tr->translate("SEX");?></td>
+			       <td scope="col"><?php echo $tr->translate("PHONE");?></td>
+			       <td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+			       <td scope="col"><?php echo $tr->translate("DATOFBIRTH");?></td>
+			       <td scope="col"><?php echo $tr->translate("NATIONALITY");?></td>
+			       <td scope="col" style="white-space: nowrap;"><?php echo $tr->translate("NATIONAL_ID");?></td>
+		           <td scope="col"><?php echo $tr->translate("NUMBER");?></td>
+			       <td scope="col" width="150px;"><?php echo $tr->translate("ADDRESS");?></td>
+			       <td scope="col" style="white-space: nowrap;"><?php echo $tr->translate("JOIN_NAME");?></td>
+			       <td scope="col"><?php echo $tr->translate("SEX");?></td>
+			       <td scope="col"><?php echo $tr->translate("PHONE");?></td>
+			       <td scope="col" style="white-space: nowrap;"><?php echo $tr->translate("NATIONAL_ID");?></td>
+			       <td scope="col"><?php echo $tr->translate("NUMBER");?></td>
+		          </tr>
+	          </thead>
+	          <?php if(!empty($this->client_list)) foreach($this->client_list as $key =>$row){?>
+			   <tr style="font-size: 12px;line-height:22px;font-family: 'Times New Roman','Khmer OS Battambang';" align="center" class="hover">
+				   <td data-label="<?php echo $tr->translate("NUM");?>"><?php echo $key+1; ?></td>
+				   <td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>" align="left" style="white-space: nowrap;"><?php echo $row['client_name'];?></td>
+				   <td data-label="<?php echo $tr->translate("SEX");?>"><?php echo $row['sex']?></td>
+				   <td data-label="<?php echo $tr->translate("PHONE");?>" align="left"><?php echo $row['phone']?></td>
+				   <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" style="white-space:normal;max-width:200px !important;"><?php echo $row['house_name']?></td>
+				   <td data-label="<?php echo $tr->translate("DATOFBIRTH");?>">&nbsp;<?php echo date("d/m/Y",strtotime($row['dob']));?></td>
+				   <td data-label="<?php echo $tr->translate("NATIONALITY");?>">&nbsp;<?php echo $row['nationality']?></td>
+		           <td data-label="<?php echo $tr->translate("NATIONAL_ID");?>"  style="white-space: nowrap;">&nbsp;<?php echo $row['doc_name']?></td>
+		           <td data-label="<?php echo $tr->translate("NUMBER");?>">&nbsp;<?php echo $row['nation_id']?></td>
+				   <td data-label="<?php echo $tr->translate("ADDRESS");?>" style="line-height:15px;text-align: left">&nbsp;<?php echo "#".$row['house'].",St".$row['street'].", ".$row['village_name'].", ".$row['com_name'].", ".$row['dis_name'].", ".$row['pro_name']?></td>
+				   <td data-label="<?php echo $tr->translate("JOIN_NAME");?>"><?php echo $row['hname_kh']?></td>
+				   <td data-label="<?php echo $tr->translate("SEX");?>" style="line-height:15px;text-align: left"><?php echo $row['ksex'];?></td>
+				   <td data-label="<?php echo $tr->translate("PHONE");?>"><?php echo ($row['lphone'])?></td>
+				   <td data-label="<?php echo $tr->translate("NATIONAL_ID");?>" style="white-space: nowrap;"><?php echo $row['joindoc_name'];?></td>
+				   <td data-label="<?php echo $tr->translate("NUMBER");?>"><?php echo $row['rid_no'];?></td>
+				   <td data-label="<?php echo $tr->translate("DATE");?>"><?php echo date("d/M/Y",strtotime($row['create_date']))?></td>
+			   </tr>
+			  <?php }?>
+	    </table>
+	    <br />
+	    <?php echo $this->footerReport;?>
+	</div>
+</div>
+<script type="text/javascript">
+	dojo.require("dojo.data.ObjectStore");
+	dojo.require("dijit.form.DateTextBox");
+	dojo.ready(function(){
+		dijit.byId('province').attr('value',<?php echo $this->result['province'];?>);	
+		var district_data = new dojo.store.Memory({
+			   data: <?php print_r(Zend_Json::encode($this->district));?>
+		});
+	 
+		new dijit.form.FilteringSelect({
+			store: dojo.data.ObjectStore({objectStore: district_data}),
+			autoComplete: true,
+			query: {
+				pro_id:"<?php echo $this->result['province'];?>"
+			},            
+			required: false,		           
+			name: "district",
+			id: "district",
+			searchAttr: "name",
+			value: "<?php echo $this->result['district'];?>",
+			placeholder:"<?php echo $tr->translate('DISTRICT');?>",
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+				onChange: function() {
+					filterCommune();
+			}
+		}, "district");
+	
+
+		var commune_data = new dojo.store.Memory({
+			   data: <?php print_r(Zend_Json::encode($this->commune));?>
+		});
+	 
+		new dijit.form.FilteringSelect({
+			store: dojo.data.ObjectStore({objectStore: commune_data}),
+			autoComplete: true,
+			query: {
+				district_id: "<?php echo $this->result['district'];?>"
+			},            
+			required: false,		           
+			name: "commune",
+			id: "commune",
+			searchAttr: "name",
+			placeholder:"<?php echo $tr->translate('COMMUNE');?>",
+			value: "<?php echo $this->result['commune'];?>",
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+				onChange: function() {
+				filterVillage();
+			}
+		}, "commune");
+
+		var village_data = new dojo.store.Memory({
+			   data: <?php print_r(Zend_Json::encode($this->village));?>
+		});
+	 
+		new dijit.form.FilteringSelect({
+			store: dojo.data.ObjectStore({objectStore: village_data}),
+			autoComplete: true,
+			query: {
+				commune_id:"<?php echo $this->result['commune'];?>"
+			},            
+			required: false,	
+			placeholder:"<?php echo $tr->translate('VILLAGE');?>",	           
+			name: "village",
+			id: "village",
+			searchAttr: "name",
+			value: "<?php echo $this->result['village'];?>",
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+				onChange: function() {
+			}
+		}, "village");
+		
+		getBranchInfo();
+		document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_CLIENT");?>';
+		document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>'; 
+	
+});
+function filterDistrict(){
+	dijit.byId('district').query.pro_id = dijit.byId('province').get('value');
+}
+function filterCommune(){
+	dijit.byId('commune').query.district_id = dijit.byId('district').get('value');
+}
+function filterVillage(){
+	id =dijit.byId('commune').get('value');
+	dijit.byId('village').query.commune_id = dijit.byId('commune').get('value');
+}
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

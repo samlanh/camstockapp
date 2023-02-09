@@ -1,0 +1,115 @@
+
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("MESSAGE"));
+	$url_copy =$this->url(array('module'=>'message','controller'=>'index','action'=>'add'));
+	
+	$edit_sale = $tr->translate("RESENT");
+	$urlEdit = $this->baseUrl()."/message/index/edit/id/";
+	$frm = $this->frm_search;
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+.checkbalance{
+	padding: 5px;
+	position: relative;
+    display: block;
+    margin-bottom: 12px;
+    border: 1px solid #E4E4E4;
+    -webkit-border-radius: 5px;
+    overflow: hidden;
+    padding-bottom: 5px;
+    -webkit-background-clip: padding-box;
+    -moz-border-radius: 5px;
+    -moz-background-clip: padding;
+    border-radius: 5px;
+    background: #ffc9c9;
+    transition: all .3s ease-in-out;
+    box-shadow: 1px 2px 3px #ef6262;
+    font-size: 18px;
+    font-weight: bold;
+}
+</style>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('MESSAGE');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
+			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'message','controller'=>'index','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+			   <div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('end_date');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<p class="checkbalance" >Credit នៅសល់ : <?php echo $this->creditBalance;?></p>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<button iconclass="dijitIconChart" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("ទាយយករបាយការណ៍ផ្ញើចេញ");?></button>
+					</div>
+					
+					<div class="col-md-2 col-sm-2 col-xs-12">
+					</div>
+				</div>
+			</form>
+			<input type="hidden" id="id_selected" name="id_selected" />
+		</div>
+		<div class="card-box">
+			<?php echo $this->list;?>
+		</div>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+
+
+function checked_id(index){
+	$("#id_selected").val('');
+	 var searchIDs = $('input:checked').map(function(){
+	      return $(this).val();
+	    });
+	    $("#id_selected").val(searchIDs.get());
+}
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row+'?rightclick=true', '_blank');
+}
+</script>

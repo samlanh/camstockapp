@@ -1,0 +1,38 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('IMPORT_FILE_ITEMS_PRICE')); 
+	$url_save = $this->url(array('module'=>'foundation','controller'=>'import','action'=>'index'));
+?>
+<script type="text/javascript" src="js/dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+<form id='add_client' enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+	<script type="dojo/method" event="onSubmit">			
+		if(this.validate()) {
+			return true;
+		}else{
+			return false;
+		}
+	</script>
+	<table width="50%" style=" margin-left:25%; margin-top:10px;">
+		<tr class="header">
+			<td colspan="2"><?php echo $tr->translate('IMPORT_FILE_ITEMS_PRICE')?></td>
+		</tr>
+		<tr>
+			<td>
+				<fieldset>
+					<table style="margin: 0 auto; width:100%; font-size:14px;white-space: nowrap;" cellspacing="5">
+					    <tr>
+					    	<td><?php echo $tr->translate('CHOOSE_FILE')?>(Excel)</td>
+					   	 	<td valign="middle"><input type="file" name="file_excel" id="file_excel" required="required" class="fullside"/></td>
+						</tr>
+					</table>
+				</fieldset>		
+			</td>
+		</tr>
+		<tr class="footer_button">
+			<td colspan="6" align="center">
+			 <input type="submit" value="SAVE_CLOSE" label="<?php echo $tr->translate('IMPORT_FILE')?>" id="import_file" dojoType="dijit.form.Button" name="import_file"
+				iconClass="dijitEditorIcon dijitEditorIconSave" /> 
+			</td>
+		</tr>
+	</table>	
+</form>

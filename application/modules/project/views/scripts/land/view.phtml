@@ -1,0 +1,238 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('PROJECT_INFO'));
+	$rs = $this->propertyinfor;
+	if ($rs['is_lock']==0){
+		$status = $tr->translate("NOT_YET_SALE");
+	}else{
+		$status = $tr->translate("SOLD_OUT");
+	}
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	
+	$imagelogo = $this->baseUrl()."/images/logo.jpg";
+	if (!empty($rs['project_logo'])){
+		$imagelogo = $this->baseUrl()."/images/projects/".$rs['project_logo'];
+	}
+?>	
+<style>
+.border-cover {
+  border: 1px solid #ccc;
+  padding: 0px 4px;
+  background: #E5F2F5;
+}}
+</style>
+<table width="100%">
+<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+		<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+			<i class="fa fa-print"></i>
+		</div>
+      <div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+		<div class="ptss__settings">
+			<div class="ptss__single-setting" id="ptss__layout">
+				<div class="ptss__setting-control">
+					<div class="ptss__layout-wrapper">
+						<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+						<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+						<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+</div>
+</table>
+<table  cellspacing="10" class='fullside' style="font-size:12px;font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;">
+	<tr>
+		<td>	
+		<div style="background: #fff;width: 24cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+			<div id="divPrint" style="width: 100%;">
+					<style>
+		   			tr.header-line{
+		   				font-size: 16px;
+					}
+		   		</style>
+				<table width="100%" style="font-size:12px; margin: 23px; font-family:'Times New Roman','Khmer OS Battambang';"> 
+					<tr>
+						<td>
+						   <table width="100%" >
+						   			<tr>
+										<td id="projectlogo" width="25%">
+											<img style="height:75px;" src="<?php echo $imagelogo;?>">
+										</td>	
+										<td align="center" width="44%"  >
+											<strong style="font-weight:bold;color:#000; font-weight: initial; font-family:'Times New Roman','Khmer OS Muol Light'; font-size:25px;"><u><?php echo $tr->translate("PROPERTY_INFO"); ?></u></strong><br />
+										</td>
+										<td width="28%" align="right">
+										</td>
+									</tr>
+						   </table>
+					   </td>
+				   </tr>
+			   </table>
+			   <table  cellspacing="5"  style="background:#fff;margin: 0 auto;width: 100%;font-size:16px;font-family:'Times New Roman','Khmer OS Battambang';" >
+		      		<tr class="header-line">
+		     	         <td colspan="6" style="border-bottom:1px solid #000; font-weight: initial; font-family:'Times New Roman','Khmer OS Muol Light'; font-size:16px;"><strong><?php echo $tr->translate("PROJECT_INFO");?></strong></td>
+		     	    </tr>
+		      		<tr>
+	      		      	<td style="width:80%; vertical-align: top;" colspan="4">
+	      		         	<table width="100%" style="font-size:18px;line-height: 32px; margin: 2%; ">
+	      		               <tr>
+	      		                  	<td><?php echo $tr->translate("PROJECT_NAME");?></td>
+									<td >: <?php echo $rs['project_name'];?></td>
+	      		               </tr>
+	      		               <tr>
+	      		               		<td><?php echo $tr->translate("ADDRESS")?></td>
+									<td>: <?php echo $rs['br_address'];?></td>
+	      		               </tr>
+		      		         </table>
+						</td>
+		      		</tr>
+		      		<tr class="header-line">
+		     	         <td colspan="6" style="border-bottom:1px solid #000; font-weight: initial; font-family:'Times New Roman','Khmer OS Muol Light'; font-size:16px;"><strong><?php echo $tr->translate("PRICE_INFO");?></strong></td>
+		     	    </tr>
+		      		<tr>
+	      		      	<td style="width:80%; vertical-align: top;" colspan="4">
+	      		         	<table width="100%" style="font-size:18px;line-height: 32px; margin: 2%; ">
+	      		               <tr>
+	      		                  	<td><?php echo $tr->translate("LOAN_NO");?></td>
+									<td >: <?php echo $rs['land_code'];?></td>
+									<td><?php echo $tr->translate("HEAD_TITLE_NO")?></td>
+									<td>: <?php echo $rs['hardtitle'];?></td>
+	      		               </tr>
+	      		               <tr>
+	      		               		<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
+									<td>: <?php echo $rs['land_address'];?></td>
+	      		               		<td><?php echo $tr->translate("STREET")?></td>
+								  	<td>: <?php echo $rs['street'];?></td>
+	      		               </tr>
+	      		               <tr>
+	      		               		<td><?php echo $tr->translate("PROPERTY_TYPE")?></td>
+								 	<td>: <?php echo $rs['pro_type'];?></td>
+	      		               		<td><?php echo $tr->translate("LAND_PRICE")?></td>
+								 	<td>: <?php echo number_format($rs['land_price'],2);?> $</td>
+	      		               </tr>
+	      		               <tr>
+	      		               		<td><?php echo $tr->translate("HOUSE_PRICE")?></td>
+								  	<td>: <?php echo number_format($rs['house_price'],2);?> $</td>
+	      		               		<td><?php echo $tr->translate("PRICE")?></td>
+								  	<td>: <?php echo number_format($rs['price'],2);?> $</td>
+	      		               </tr>
+		      		         </table>
+						</td>
+		      		</tr>
+		      		<tr class="header-line">
+		     	         <td colspan="6" style="border-bottom:1px solid #000;  font-weight: initial; font-family:'Times New Roman','Khmer OS Muol Light'; font-size:16px;"><strong><?php echo $tr->translate("Property Infomation");?></strong></td>
+		     	    </tr>
+		     	    <tr>
+	      		      	<td style="width:80%; vertical-align: top;" colspan="4">
+	      		         	<table width="100%" style="font-size:18px; line-height: 32px; margin: 2%; ">
+	      		               <tr class="head" style="font-weight: initial;font-family:'Times New Roman','Khmer OS Muol Light';" >
+								   <td colspan="2" align="center">
+										  <u><?php echo $tr->translate("INFO_OF_LAND")?></u>
+									</td>
+								   <td colspan="2" align="center">
+										  <u><?php echo $tr->translate("HOUSE_INFO")?></u>
+									</td>
+							   </tr>
+	      		               <tr>
+	      		               	  <td><?php echo $tr->translate("WIDTH")?></td>
+								  <td>: <?php echo $rs['width'];?> ម៉ែត្រ</td>
+								  <td><?php echo $tr->translate("WIDTH")?></td>
+								  <td>: <?php echo $rs['land_width'];?> ម៉ែត្រ</td>
+	      		               </tr>
+	      		                 <tr>
+	      		               		<td><?php echo $tr->translate("HEIGHT")?></td>
+									<td>: <?php echo $rs['height'];?> ម៉ែត្រ</td>
+	      		               		<td><?php echo $tr->translate("HEIGHT")?></td>
+									<td>: <?php echo $rs['land_height'];?> ម៉ែត្រ</td>
+	      		               </tr>
+	      		               <tr>
+	      		               		<td><?php echo $tr->translate("SIZE")?></td>
+									<td>: <?php echo $rs['land_size'];?> ម៉ែត្រក្រឡា</td>
+									<td><?php echo $tr->translate("SIZE")?></td>
+								  	<td>: <?php echo $rs['full_size'];?> ម៉ែត្រក្រឡា</td>
+	      		               </tr>
+	      		                <tr>
+	      		               	  <td><?php echo $tr->translate("SOUTH")?></td>
+								  <td>: <?php echo $rs['south'];?></td>
+								  <td><?php echo $tr->translate("FLOOR")?></td>
+								  <td>: <?php echo $rs['floor'];?></td>
+	      		               </tr>
+	      		               <tr>
+      		               		  <td><?php echo $tr->translate("NORTH")?></td>
+								  <td>: <?php echo $rs['north'];?></td>
+	      		               	  <td><?php echo $tr->translate("BEDROOM")?></td>
+								  <td>: <?php echo $rs['bedroom'];?></td>
+	      		               </tr>
+	      		               <tr>
+								  <td><?php echo $tr->translate("WEST")?></td>
+								  <td>: <?php echo $rs['west'];?></td>
+								  <td><?php echo $tr->translate("LIVING")?></td>
+								  <td>: <?php echo $rs['living'];?></td>
+	      		               </tr>
+	      		               <tr>
+	      		               		<td><?php echo $tr->translate("EAST")?></td>
+									<td>: <?php echo $rs['east'];?></td>
+									<td><?php echo $tr->translate("DINNER_ROOM")?></td>
+									<td>: <?php echo $rs['dinnerroom'];?></td>
+	      		               </tr>
+	      		              	<tr>
+									<td><?php echo $tr->translate("NOTE")?></td>
+									<td>: <?php echo $rs['note'];?></td>
+									<td><?php echo $tr->translate("BUIDING_YEAR")?></td>
+									<td>: <?php echo $rs['buidingyear'];?></td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("STATUS_BUY")?></td>
+									<td>: <?php echo $status;?></td>
+									<td><?php echo $tr->translate("PARKING_SPACE")?></td>
+									<td>: <?php echo $rs['parkingspace'];?></td>
+								</tr>
+		      		         </table>
+						</td>
+		      		</tr>
+			      	</table>
+				</div>
+			</div>
+		</td>
+	</tr>
+</table>
+<div class="clearfix"></div>
+ <div class="card-box">
+     <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+        <input type="button"  label="<?php echo $tr->translate("GO_BACK");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'project','controller'=>"land",'action'=>'index'),null,true); ?>';"/>
+		<input  type="button" id="wu-register" iconClass="dijitIconEdit" label="<?php echo $tr->translate("GO_EDIT");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'project','controller'=>"land",'action'=>'edit','id'=>$rs['id']),null,true); ?>';"/>
+    </div>
+  </div>
+</form>
+<table>
+<tr>
+</tr>
+</table>
+<iframe style="font-size: 10px; !important;" name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+<script>
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+}
+</script>

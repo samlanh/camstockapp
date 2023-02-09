@@ -1,0 +1,370 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ADD_STAFF'));
+   $frm_staff= $this->frm_co;
+  ?>
+<script>
+	dojo.require("dijit.form.ValidationTextBox");
+	dojo.require("dijit.form.CheckBox");
+</script>
+<style>
+.image-box {
+    text-align: center;
+}
+.image-box img {
+    width: 120px;
+    height: 130px;
+    border: solid 1px #eee;
+}
+.button_browse {
+    /*margin-top: 10px; */
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    height: 30px;
+    cursor: pointer;
+    background: #fbf9f9;
+    border: 1px solid #e8e8e8;
+}
+.button_browse span {
+    line-height: 33px;
+    font-weight: 600;
+    cursor: pointer;
+}
+input.btn_borwse_image {
+    position: absolute;
+    width: 100%;
+    height: 35px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+.account-image {
+    border: solid 1px #eee;
+    width: 120px;
+}
+</style>
+<div class="card">
+	<div class="card-content collapse show">
+		<form  id='add_techer' action="<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					if(isCheck==1){
+						infoMessageAlert('<?php echo $tr->translate("This user name has been use on other account");?>');
+						dijit.byId('user_name').focus();
+						return false;
+					}
+					loadingBlock();
+					dijit.byId('save_new').set('disabled',true);
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_STAFF');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('INFO_STAFF')?> </p>
+											
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm_staff->getElement('branch_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("MAIN_AGENCY");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('parent_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STAFF_CODE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('co_id'); echo $frm_staff->getElement('id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CO_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('name_kh');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SEX");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('co_sex');?>
+									   </div>
+									</div>
+									 <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NATIONALITY_NO");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('national_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("POB");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('pob');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	             </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-phone-alt" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CONTACT_INFO')?> </p>
+											
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('tel');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("EMAIL");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('email');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CURRENT_ADDRESS");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('address');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('note');?>
+									   </div>
+									</div>
+									
+									<div class="form-group">
+										<div class="custom-control custom-checkbox float-start ">
+											<input type="checkbox" class="checkboxSystem custom-control-input" name="check_create" id="check_create" value="all" onChange="CheckCreatUser();" >
+											<label class="custom-control-label" for="check_create">
+												<?php echo $tr->translate('CREATE_AS_USER');?>
+											</label>
+										</div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_NAMES");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('user_name');?>
+									   </div>
+									</div>
+									 <div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_TYPE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('user_type');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PASSWORD");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="password" required="true" name="password" id="password" placeholder="<?php echo $tr->translate("PASSWORD");?>" 
+											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
+											dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside'/>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	             </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-picture" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('OTHER_INFO')?> </p>
+											
+										</div> 
+									</div>
+									 <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ></label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											 <?php 
+												$images = $this->baseUrl().'/images/no-profile.png';
+											?>
+											<input name="old_photo"  value="<?php echo $this->photo;?>" type="hidden" />
+											<div class="account-image" >
+												<div class="image-box">
+													<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
+												</div>
+												<div class="button_browse">
+												<div id='preview'></div>	
+													<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+													<input class="btn_borwse_image" type="file" id="photo" name="photo" />
+												</div>
+											</div>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	        </div>
+			<div class="clearfix"></div>
+			<div class="card-box">
+				<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"  id="save_new" value="save_new" name="save_new" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button" />
+	    		</div>
+	    	</div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+dojo.require("dojo.data.ItemFileWriteStore"); 
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function (e) {
+            $('#profile_wiew').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+$("#photo").change(function(){
+    readURL(this);
+});
+function CheckCreatUser(){
+	  if (dojo.byId("check_create").checked){
+		  dijit.byId('user_name').set('required',true); 
+		  dijit.byId('user_name').set('readonly',false); 
+		  dijit.byId('user_type').set('required',true); 
+		  dijit.byId('user_type').set('readonly',false); 
+		  dijit.byId('password').set('required',true); 
+		  dijit.byId('password').set('readonly',false); 
+		  dijit.byId('password').set('disabled', false);
+		  dijit.byId('user_name').set('disabled', false);
+		  dijit.byId('user_type').set('disabled', false);
+	  }else{
+		  $('#password').val('');
+		  dijit.byId('user_name').set('required',false); 
+		  dijit.byId('user_name').set('readonly',true);
+		  dijit.byId('user_type').set('required',false); 
+		  dijit.byId('user_type').set('readonly',true);
+		  dijit.byId('password').set('required',false); 
+		  dijit.byId('password').set('readonly',true);
+		  
+		  dijit.byId('password').set('disabled', true);
+		  dijit.byId('user_name').set('disabled', true);
+		  dijit.byId('user_type').set('disabled', true);
+	  }
+}
+dojo.ready(function(){
+	try{
+		CheckCreatUser();
+	}catch(e){
+		alert(e);
+	}
+	$(window).keydown(function(event){
+		if(event.keyCode == 13) {
+		  event.preventDefault();
+		  return false;
+		}
+	  });
+});
+var isCheck =0;
+var url_checkusername = '<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'checkusername')); ?>';
+function getCheckUserName(){
+	user_name = dijit.byId('user_name').get('value');
+	dojo.xhrPost({
+		url:url_checkusername,	
+		content:{ 
+		    'user_name':user_name,
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			if(data==1){
+				infoMessageAlert('<?php echo $tr->translate("This user name has been use on other account");?>');
+				dijit.byId('user_name').focus();
+				isCheck=1;
+			}else{
+				isCheck=0;
+			}
+		},
+		error: function(err) {
+		}
+	});
+}
+var url_staffcode = '<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'getstaffcode')); ?>';
+	function getStaffCode(){
+		branch_id = dijit.byId('branch_id').get('value');
+		dijit.byId('co_id').attr('value','');
+		if(branch_id==''){
+			alert('Please Select Branch');
+			dijit.byId('branch_id').focus();
+			return false;
+		}
+		dojo.xhrPost({
+			url:url_staffcode,	
+			content:{ 
+			    'branch_id':branch_id,
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				dijit.byId('co_id').attr('value',data);
+			},
+			error: function(err) {
+			}
+		});
+	}
+</script>

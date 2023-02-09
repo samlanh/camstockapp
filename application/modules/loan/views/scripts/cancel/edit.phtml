@@ -1,0 +1,426 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('SALE_CANCEL'));
+	$frm = $this->frm_loan;
+?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dijit.form.Textarea");
+</script>
+ <div class="card">
+	<div class="card-content collapse show">
+		<form id="add_cancel" action="<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			 <script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					cancelType = dijit.byId('cancel_type').get('value');
+					if(cancelType==2){
+						returnBack = dijit.byId('return_back').get('value');
+						if(isNaN(returnBack)){ 
+							returnBack=0; 
+						}
+						if(returnBack<=0){
+							infoMessageAlert("<?php echo $tr->translate('RETURN_MONEY_BACK_MUST_BE_BIGGER_THAN_ZERO');?>");
+							return false;
+						}
+						
+					}
+					loadingBlock();
+					dijit.byId('saveclose').set('disabled',true);
+    				return true;
+   				}else {
+    				return false;
+  			 	}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('SALE_CANCEL');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-12">
+	                <div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('INFO_INDILOAN')?> </p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('branch_id');?>
+											<?php echo $frm->getElement('old_sale_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="sale_client" />
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SALE_NO");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="sale_no" ><?php echo $frm->getElement('property_id')?>
+									   </div>
+									</div>
+									
+									
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SOLD_PRICE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('price_sold')?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('schedule_opt')?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+					
+						
+	            </div>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+	             	<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-money" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('PAYMENT_INFO')?> </p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BUY_DATE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+										<?php echo $frm->getElement('sold_date')?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INSTALLMENT_PAID");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+										<?php echo $frm->getElement('installment_paid')?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAID_AMOUNT");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('paid_amount')?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BALANCE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('balance')?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	           <div class="col-md-4 col-sm-4 col-xs-12">
+	             	<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CANCEL_INFO')?> </p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CANCEL_DATE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('cancel_date');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REASON");?> :
+									   </label>
+									</div>
+									<div class="form-group">
+									   <div class="col-md-12 col-sm-12 col-xs-12">
+											<input style=" min-height: 60px; font-family:inherit;" dojoType="dijit.form.Textarea" class="fullside" id="reason" name="reason" value="" type="text">
+									   </div>
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CANCEL_TYPE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('cancel_type');?>
+									   </div>
+									</div>
+									<div class="blogReturn">
+										<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONDITION_RETURN");?>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('condition_return');?>
+											   </div>
+										</div>
+										 <div class="dateForReturn form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SET_DATE_FOR_RETURN");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('expense_date');?>
+										   </div>
+										</div>
+										<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RETURN_MONEY_BACK");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('return_back');?>
+										   </div>
+										</div>
+										<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('status_using')?>
+										   </div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	
+	            </div>
+	        </div>
+	    	<div class="clearfix"></div>
+			 <div class="card-box">
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		  <input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" name="saveclose"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('GO_EDIT')?>" id="submitBtn" dojoType="dijit.form.Button" />
+    			</div>
+    		</div>
+		</form>
+	</div>
+</div>
+<table>
+<tr>
+</tr>
+</table>
+
+<script type="text/javascript">
+var sale_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_category));?> );
+
+dojo.ready(function(){
+	try{
+		new dijit.form.FilteringSelect({
+		store: sale_store,
+		autoComplete: false,
+		queryExpr: "*${0}*",  
+		required: false,		           
+		name: "sale_no",
+		id: "sale_no",
+		value: "<?php echo $this->row['sale_id'];?>",
+		searchAttr: "name",
+		class: 'fullside',
+			onChange: function() {
+				getLandAndClientDetail();
+			}
+		}, "sale_no");
+		new dijit.form.FilteringSelect({
+			store: sale_client_store,
+			autoComplete: false,
+			queryExpr: "*${0}*",  
+			required: false,		           
+			name: "sale_client",
+			id: "sale_client",
+			value: "<?php echo $this->row['sale_id'];?>",
+			searchAttr: "name",
+			class: 'fullside',
+				onChange: function() {
+					getLandAndClientDetail("2");
+				}
+			}, "sale_client");
+
+		
+		getSaleClie();
+		getSaleNo();
+		
+		checkCancelType();
+		checkCondiction();
+		
+	}catch(e){
+		
+	}
+});
+
+
+var oldbranch='<?php echo $this->row['branch_id'];?>';
+var oldsale='<?php echo $this->row['sale_id'];?>';
+var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-sale'));?>';
+	function getSaleNo(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==0){
+			return false;}
+		dojo.xhrPost({
+			url:url_getSaleNo,	
+			content:{ 
+				'branch_id': branch_id
+			},
+			handleAs:"json",
+			load: function(data) {	
+				sale_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('sale_no').set('store', sale_store);
+			    if(oldbranch==branch_id){
+			    dijit.byId('sale_no').attr('value',oldsale);
+			    }
+			},
+			error: function(err) {
+			}
+		});
+	}
+	var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
+	function getSaleClie(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==0){
+			return false;}
+		dojo.xhrPost({
+			url:url_getSaleClien,	
+			content:{ 
+				'branch_id': branch_id , 'sale_id':oldsale,
+				'is_completed':1
+			},
+			handleAs:"json",
+			load: function(data) {	
+				sale_client_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('sale_client').set('store', sale_client_store);
+			},
+			error: function(err) {
+			}
+		});
+	}
+	var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
+	function getLandAndClientDetail(inds){
+		if(inds == "2"){
+			sale_id = dijit.byId('sale_client').get('value');
+			dijit.byId('sale_no').set("value",sale_id)
+		}else{
+			sale_id = dijit.byId('sale_no').get('value');
+			dijit.byId('sale_client').set("value",sale_id);
+		}
+		dojo.xhrPost({
+			url:url_land,	
+			content:{ 
+			    'sale_id':sale_id
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				dijit.byId('installment_paid').attr('value',data.installment_paid);
+				total_principal= data.total_principal;
+				if(isNaN(total_principal) || total_principal==null){total_principal=0;}
+				total_principal = parseFloat(total_principal);
+				dijit.byId('paid_amount').attr('value',total_principal);
+				balance = data.price_sold-total_principal;
+				dijit.byId('balance').attr('value',balance);
+				dijit.byId('price_sold').attr('value',data.price_sold);
+				dijit.byId('schedule_opt').attr('value',data.payment_id);
+				dojo.byId("property_id").value = data.property_id;
+				dijit.byId('sold_date').attr('value',data.buy_date);
+			},
+			error: function(err) {
+			}
+		});
+	}
+	function checkreturnAmount(){
+			paid_amount = dijit.byId('paid_amount').get('value');
+			return_back = dijit.byId('return_back').get('value');
+			sale_id = dijit.byId('sale_client').get('value');
+			if(sale_id==''){
+				alert('សូមេជ្រើសរើសអតិថិជនជាមុនសិន!');
+				dijit.byId('sale_client').focus();
+				dijit.byId('return_back').attr('value',0);
+				return false;
+			}
+			if(return_back>paid_amount){
+				alert('ប្រាក់ដែលប្រគល់ត្រឡប់់មិនអាចធំជាងប្រាក់ដែលបានបង់នោះទេ!');
+				dijit.byId('return_back').attr('value',paid_amount);
+			}
+	}
+
+	function returnMOnth(monthnum){
+		var month = new Array();
+		month[1] = "Jan";
+		month[2] = "Feb";
+		month[3] = "Mar";
+		month[4] = "Apr";
+		month[5] = "May";
+		month[6] = "Jun";
+		month[7] = "Jul";
+		month[8] = "Aug";
+		month[9] = "Sep";
+		month[10] = "Oct";
+		month[11] = "Nov";
+		month[12] = "Dec";
+		return month[monthnum];
+	}
+	function doPrint() {
+		dojo.byId("printblog2").innerHTML = dojo.byId('divPrint').innerHTML;
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML <?php if($this->data['showreceipt']>1){ ?>+ dojo.byId('divPrint1').innerHTML<?php }?>;
+		window.frames["print_frame"].window.focus();
+		window.frames["print_frame"].window.print();
+		printSubmit();
+		hideDialog();
+	}
+
+	function checkCancelType(){
+		cancel_type = dijit.byId('cancel_type').get('value');
+		if(cancel_type==1){
+			$(".blogReturn").css("display", "none");
+			dijit.byId('return_back').attr('value',0);
+		}else{
+			$(".blogReturn").css("display", "block");
+		}
+	}
+	function checkCondiction(){
+		condition_return = dijit.byId('condition_return').get('value');
+		if(condition_return==1){
+			$(".dateForReturn").css("display", "block");
+			
+		}else{
+			$(".dateForReturn").css("display", "none");
+		}
+	}
+			
+		
+</script>
